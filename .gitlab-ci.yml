@@ -1,0 +1,28 @@
+default:  
+  image: 
+    name: hashicorp/terraform:latest
+    entrypoint: [""]
+
+Check task:
+  stage:  build
+  before_script:
+    - apk add bash jq grep libc6-compat
+  script:
+    - |
+      cat <<EOF > ./base/root.tf
+      provider "aws" {
+        region                      = "us-east-1"
+        skip_credentials_validation = true
+        skip_requesting_account_id  = true
+        skip_metadata_api_check     = true
+        s3_force_path_style         = true
+        access_key                  = "mock_access_key"
+        secret_key                  = "mock_secret_key"
+      }
+      EOF
+    - cp ./base/root.tf ./compute/root.tf
+    - >
+      [[ -z ${TASK+x} ]] && while read task || [ -n "$task" ]; do
+        echo "Check $task"
+        ./proctor.sh.x $task
+      done <CheckList || ./proctor.sh.x $TASK
