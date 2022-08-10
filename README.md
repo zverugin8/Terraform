@@ -515,8 +515,6 @@ Run `terraform validate` and `terraform fmt` to check if your configuration is v
 
 - Terraform moved resources with no errors
 - AWS resources are NOT changed (check AWS Console)
-- Save following artifacts under `/reports/task10/` folder:
-    - `terraform.tfstate` file for both configurations
 
 ## TASK 11 - Import resources
 
@@ -538,8 +536,6 @@ If applicable all resources should be defined with the provider alias.
 
 - Terraform imported resources with no errors
 - AWS resources are NOT changed (check AWS Console)
-- Save following artifacts under `/reports/task11/` folder:
-    - `terraform.tfstate` file for `compute` configuration
 
 ## TASK 12 - Use data discovery
 Learn about [terraform data sources](https://www.terraform.io/docs/language/data-sources/index.html) and [querying terraform data sources](https://learn.hashicorp.com/tutorials/terraform/data-sources?in=terraform/configuration-language&utm_source=WEBSITE&utm_medium=WEB_BLOG&utm_offer=ARTICLE_PAGE).
@@ -602,10 +598,6 @@ Apply your changes when ready.
 - Terraform created infrastructure with no errors
 - AWS resources created as expected (check AWS Console)
 - Nginx server responds on Loadbalancer's IP Address with expected response 
-- Save the following artifacts under `/reports/task13/` folder:
-    - `terraform.tfstate` file
-    - `terraform apply` log (`tf_apply.log`)
-    - `terraform plan` (after changes) log (`tf_plan_after.log`)
 
 ## TASK 14 - Modules
 
