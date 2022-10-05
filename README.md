@@ -1,6 +1,8 @@
 ## Overview
 
-A set of the Terraform training materials(includes self-study materials and hands-on tasks).
+A set of the Terraform training materials including self-study materials and hands-on tasks.
+
+![ˈtɛrəfɔːm](https://i.imgur.com/RXAzrGo.jpg)
 
 ## Materials
 - [Core concepts of IaC and Terraform](concepts.md)
@@ -8,9 +10,8 @@ A set of the Terraform training materials(includes self-study materials and hand
 ## Tasks
 - [AWS practical lab](task_aws.md)
 
-![ˈtɛrəfɔːm](https://i.imgur.com/RXAzrGo.jpg)
 
-# Quizes
+## Quizes
 There is a Terraform related quiz on examinator.epam.com.
 
 Please contact @Denis Azarov in case if you would like to request Quiz assignement for your mentees or you would like to contribute to Quizes development.
