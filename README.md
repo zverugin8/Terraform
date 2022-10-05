@@ -1,29 +1,23 @@
-- [Introduction](concepts.md#introduction)
-  * [What is IaC and Terraform?](concepts.md#what-is-infrastructure-as-code-iac-and-terraform)
-  * [Core concepts](concepts.md#core-concepts)
-  * [Terraform in 15 minutes](concepts.md#terraform-in-15-minutes)
-  * [Useful links](concepts.md#useful-links)
-  * [Check yourself](concepts.md#check-yourself)
-- [Problem to Be Solved in This Lab](task_aws.md#problem-to-be-solved-in-this-lab)
-  * [Explanation of the Solution](task_aws.md#explanation-of-the-solution)
-  * [PRE-REQUISITES](task_aws.md#pre-requisites)
-- [Creating Infrastructure](task_aws.md#creating-infrastructure)
-  * [TASK 1 - Creating VPC](task_aws.md#task-1-creating-vpc)
-  * [TASK 2 - Import Your SSH Key into AWS](task_aws.md#task-2-import-your-ssh-key-into-aws)
-  * [TASK 3 - Create an S3 Bucket](task_aws.md#task-3-create-an-s3-bucket)
-  * [TASK 4 - Create IAM Resources](task_aws.md#task-4-create-iam-resources)
-  * [TASK 5 - Create a Security Group](task_aws.md#task-5-create-a-security-group)
-  * [TASK 6 - Form TF Output](task_aws.md#task-6-form-tf-output)
-  * [TASK 7 - Configure a remote data source](task_aws.md#task-7-configure-a-remote-data-source)
-  * [TASK 8 - Create EC2/ASG/ELB](task_aws.md#task-8-create-ec2asgelb)
-- [Working with Terraform state](task_aws.md#working-with-terraform-state)
-  * [TASK 9 - Move state to S3/Locking](task_aws.md#task-9-move-state-to-s3locking)
-  * [TASK 10 - Move resources](task_aws.md#task-10-move-resources)
-  * [TASK 11 - Import resources](task_aws.md#task-11-import-resources)
-  * [TASK 12 - Use data discovery](task_aws.md#task-12-use-data-discovery)
-- [Advanced tasks](task_aws.md#advanced-tasks)
-  * [TASK 13 - Expose node output with nginx](task_aws.md#task-13-expose-node-output-with-nginx)
-  * [TASK 14 - Modules](task_aws.md#task-14-modules)
+## Overview
 
+A place where we are developing a set of the Terraform training materials(includes self-study materials and hands-on tasks).
+
+We are trying to keep materials from this repo as much universal as possible. This approach let use this materials in multiple trainings and mentoring.
+
+This repository is created to be open for any change proposed by anyone in open source way - so any contribution is appreciated.
+
+## Contribution Rules
+
+### Content contributors:
+- Anyone can propose a change to this repository via Merge Request.
+- Only CODEOWNERS members can merge to master.
+- If you add a new AWS service/core feature consider to add a question about it to a control question section. Use common sense.
+
+
+## Materials
+- [Core concepts of IaC and Terraform](concepts.md)
+
+## Tasks
+- [AWS practical lab](task_aws.md)
 
 ![ˈtɛrəfɔːm](https://i.imgur.com/RXAzrGo.jpg)
