@@ -21,3 +21,8 @@ This repository is created to be open for any change proposed by anyone in open 
 - [AWS practical lab](task_aws.md)
 
 ![ˈtɛrəfɔːm](https://i.imgur.com/RXAzrGo.jpg)
+
+# Quizes
+There is a Terraform related quiz on examinator.epam.com.
+
+Please contact @Denis Azarov in case if you would like to request Quiz assignement for your mentees or you would like to contribute to Quizes development.
