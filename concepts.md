@@ -1,6 +1,7 @@
 - [Introduction](concepts.md#introduction)
   * [What is IaC and Terraform?](concepts.md#what-is-infrastructure-as-code-iac-and-terraform)
   * [Core concepts](concepts.md#core-concepts)
+  * [Terraform Code Snippets](concepts.md#terraform-code-snippets)
   * [Terraform in 15 minutes](concepts.md#terraform-in-15-minutes)
   * [Useful links](concepts.md#useful-links)
   * [Check yourself](concepts.md#check-yourself)
@@ -121,6 +122,11 @@ Creating additional workspaces is optional, but can be useful in certain situati
 
 You can also use an additional tool like [Terraspace](https://github.com/boltops-tools/terraspace) or [Terragrunt](https://github.com/gruntwork-io/terragrunt). These are also completely optional, but can make your workflow easier if you need the features they offer (and you are willing to invest additional time to learn them).
 
+## Terraform Code Snippets
+
+The raw theory is nothing without practical examples. 
+
+So, you can find actual code examples [there](examples/README.md#terraform-code-snippets).
 
 ## Terraform in 15 minutes
 
