@@ -2,10 +2,10 @@
   * [Explanation of the Solution](task_azure.md#explanation-of-the-solution)
   * [PRE-REQUISITES](task_azure.md#pre-requisites)
 - [Creating Infrastructure](task_azure.md#creating-infrastructure)
-  * [TASK 1 - Creating Virtual Network](task_azure.md#task-1-creating-virtual-network)
-  * [TASK 2 - Import Your SSH Key into Azure](task_azure.md#task-2-import-your-ssh-key-into-azure)
+  * [TASK 1 - Create Resource Group](task_azure.md#task-1-create-resource-group)
+  * [TASK 2 - Creating Virtual Network](task_azure.md#task-2-creating-virtual-network)
   * [TASK 3 - Create a Storage account with a Storage Container](task_azure.md#task-3-create-a-storage-account-with-a-storage-container)
-  * [TASK 4 - Create Role](task_azure.md#task-4-create-role)
+  * [TASK 4 - Create IAM resources](task_azure.md#task-4-create-iam-resources)
   * [TASK 5 - Create a Network Security Group](task_azure.md#task-5-create-a-network-security-group)
   * [TASK 6 - Form TF Output](task_azure.md#task-6-form-tf-output)
   * [TASK 7 - Configure a remote data source](task_azure.md#task-7-configure-a-remote-data-source)
@@ -22,7 +22,7 @@
 
 
 # Problem to Be Solved in This Lab
- This lab shows you how to use Terraform to create infrastructure in Azure including scaling sets, virtual network, subnets, network security groups and IAM managed identity. Each instance will report its data to a specified storage container on startup. This task is binding to real production needs – for instance developers could request instances with ability to writing debug information to a storage container.
+ This lab shows you how to use Terraform to create infrastructure in Azure including scaling sets, virtual network, subnets, network security groups and IAM managed identity. Each virtual machine will report its data to a specified storage container on startup. This task is binding to real production needs – for instance developers could request virtual machines with ability to writing debug information to a storage container.
 
  
 ### Explanation of the Solution 
@@ -39,7 +39,6 @@ After you’ve created configuration, we will work on its optimization like usin
     - Perform authentication with command `az login` or `Connect-AzAccount` (for PowerShell)
     - Change current directory to `/tf_aws_lab/base` folder and create `root.tf` file. 
     - Add a `terraform {}` empty block to this file. Create an Azure provider block inside `root.tf`.
-3. Create a resource group. All your terraform resources should be inside this resource group.
 
 **Hint**: There are other ways to authenticate terraform provider before the usage. Refer to [this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs) document for details.
 
@@ -54,8 +53,35 @@ Please use **underscore** Terraform resources naming, e.g. `my_resource` instead
 You are ready for the lab!
 
 # Creating Infrastructure
+## TASK 1 - Create Resource Group
+Change current directory  to `~/tf_aws_lab/base`
 
-## TASK 1 - Creating Virtual Network
+Create a resource group for your infrastructure: `name={StudentName}-{StudentSurname}-01`
+
+**IMPORTALNT**: All newly created resources shold be created withing this resource group.
+
+**Hint**: A local value assigns a name to an expression, so you can use it multiple times within a module without repeating it. 
+
+Store all resources from this task in the `rg.tf` file.
+Store all locals in `locals.tf`.
+
+Equip all resources with following tags:
+    - `Terraform=true`, 
+    - `Project=epam-tf-azure-lab`
+    - `Owner={StudentName}_{StudentSurname}`
+
+Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
+Run `terraform plan` to see your changes.
+
+Apply your changes when you're ready.
+
+### Definition of DONE:
+
+- Terraform created infrastructure with no errors
+- Azure resources created as expected (check Azure Portal)
+- Push *.tf configuration files to git
+
+## TASK 2 - Creating Virtual Network
 Change current directory  to `~/tf_aws_lab/base`
 
 Create a network stack for your infrastructure:
@@ -78,36 +104,6 @@ Run `terraform validate`  and `terraform fmt` to check if your configuration is 
 Run `terraform plan` to see your changes.
 
 Apply your changes when you're ready.
-
-### Definition of DONE:
-
-- Terraform created infrastructure with no errors
-- Azure resources created as expected (check Azure Portal)
-- Push *.tf configuration files to git
-
-## TASK 2 - Import Your SSH Key into Azure
-
-Ensure that the current directory is `~/tf_aws_lab/base`
-
-Create a custom ssh key-pair to access your ec2 instances:
-
-- Create your ssh key pair [refer to this document](https://learn.microsoft.com/en-us/azure/virtual-machines/ssh-keys-portal?source=recommendations)
-- Create a `variables.tf` file with empty variable "ssh_key" but with the following description "Provides custom public ssh key". Never store you secrets inside the code!
-- Create a `key_pair.tf` file with `azurerm_ssh_public_key` resource. Use ssh_key variable as a public key source.
-- Run `terraform plan` and provide required public key. Observe the output and run `terraform plan` again.
-- To prevent providing ssh key on each configuration run and staying secure set binding environment variable - `export TF_VAR_ssh_key="YOUR_PUBLIC_SSH_KEY_STRING"`
-- Run `terraform plan` and observe the output.
-
-
-Equip all resources with following tags:
-    - `Terraform=true`, 
-    - `Project=epam-tf-azure-lab`
-    - `Owner={StudentName}_{StudentSurname}`
-
-
-Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
-
-Apply your changes when ready.
 
 ### Definition of DONE:
 
@@ -140,14 +136,21 @@ Apply your changes when ready.
 - Azure resources created as expected (check Azure Portal)
 - Push *.tf configuration files to git
 
-## TASK 4 - Create Role
+## TASK 4 - Create IAM resources
 Ensure that the current directory is  `~/tf_aws_lab/base`
 
 Create IAM resources:
 
--	**Role** (`name=test-move`) with write permission for storage account created on the previous stage (`name=storage-write-epam-azure-tf-lab-${random_string.my_numbers.result}`).
+- **User Managed Identity** (`name={StudentName}-{StudentSurname}-01`)
+-	**Role** (`name={StudentName}-{StudentSurname}-01`) with write permission for storage account created on the previous stage (`name=storage-write-epam-azure-tf-lab-${random_string.my_numbers.result}`).
+- Assign the Role to the User Managed Identity
 
 Store all resources from this task in the `iam.tf` file.
+
+Equip all possible resources with following tags:
+    - `Terraform=true`, 
+    - `Project=epam-tf-azure-lab`
+    - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
 Run `terraform plan` to see your changes.
@@ -176,7 +179,7 @@ Store all resources from this task in the `nsg.tf` file.
 
 Equip all possible resources with following tags:
     - `Terraform=true`, 
-    - `Project=epam-tf-gcp-lab`
+    - `Project=epam-tf-azure-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying  your changes.
@@ -196,7 +199,7 @@ Ensure that current directory is  `~/tf_aws_lab/base`
 Create outputs for your configuration:
 
 - Create `outputs.tf` file.
-- Following outputs are required: `network_name`, `subnet_ids`[set of strings], `network_security_group_id`, `ssh_public_key`, `storage_container_id`.
+- Following outputs are required: `network_name`, `subnet_ids`[set of strings], `network_security_group_id`, `storage_container_id`, `user_managed_identity_id`.
 
 Store all resources from this task in the `outputs.tf` file.
 
@@ -239,18 +242,18 @@ Ensure that the current directory is  `~/tf_aws_lab/compute`
 
 Create an init script with User Data.
 
-Getting EC2 Metadata:
+Getting Virtual Machine Metadata:
 ```
 VIRTUAL_MACHINE_UUID=$(cat /sys/devices/virtual/dmi/id/product_uuid |tr '[:upper:]' '[:lower:]')
-RESOURCE_ID=$(replace this text with request instance id from metadata e.g. using curl)
+RESOURCE_ID=$(replace this text with request virtual machine id from metadata e.g. using curl)
 ```
 
-A User Data init bash script which should get 2 parameters on instance start-up and send it to a storage container as a text file with resource_id as its name.
+A User Data init bash script which should get 2 parameters on virtual machine start-up and send it to a storage container as a text file with resource_id as its name.
 
 Command to send text a storage container (**use data rendering to pass the storage container to this script**):
 ```
 This message was generated on virtual machine {RESOURCE_ID} with the following UUID {VIRTUAL_MACHINE_UUID}
-echo "This message was generated on instance ${INSTANCE_ID} with the following UUID ${VIRTUAL_MACHINE_UUID}" | azcopy copy - 'https://{AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/{STORAGE_CONTAINER_NAME}'
+echo "This message was generated on virtual machine ${INSTANCE_ID} with the following UUID ${VIRTUAL_MACHINE_UUID}" | azcopy copy - 'https://{AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/{STORAGE_CONTAINER_NAME}'
 ```
 
 Create resources:
@@ -258,7 +261,10 @@ Create resources:
 - Create `azurerm_lb` resource (`name="epam-azure-tf-lab"`, with `frontend_ip_configuration` with reference on the created public IP address)
 - Create `azurerm_lb_backend_address_pool` resource  with reference on the created load balancer
 
-- Create an `azurerm_linux_virtual_machine_scale_set` resource. (`name="epam-azure-tf-lab"`,`instances=2`,`sku="Standard_F2"`, `custom_data=base64encode("{init_script_file}")`, source_image_reference with `publisher="Canonical"`, `offer="UbuntuServer"`, `sku="20.04-LTS"`, `version="latest"`). The network interface of future instances should be in the previously created subnet with the previosly created network security group. Authentication through the previously ssh key. This scale set should be a part of the previosly cretaed backend address pool.
+- Create an `azurerm_linux_virtual_machine_scale_set` resource. (`name="epam-azure-tf-lab"`,`instances=2`,`sku="Standard_F2"`, `custom_data=base64encode("{init_script_file}")`, source_image_reference with `publisher="Canonical"`, `offer="UbuntuServer"`, `sku="20.04-LTS"`, `version="latest"`). The network interface of future virtual machines should be in the previously created subnet with the previosly created network security group. Authentication should be through login and password. The login and password should be provided as a variable. This scale set should be a part of the previosly cretaed backend address pool. **Note** The virtual machines in the scale set should have assigned the identity which was created in the task 5
+
+**Hint**: To prevent providing password on each configuration run and staying secure set binding environment variable - `export TF_VAR_password="YOUR_PASSWORD"`
+
 - Create `azurerm_lb_probe` (`name="epam-azure-tf-lab"`, `protocol="Http"`, `port=80`, `request_path="/"`)
 - Create `azurerm_lb_rule` (`protocol="Tcp"`, `frontend_port=80`, `backend_port=80`) with reference to the previosly created frontend IP configuration name, IDs of the backend address pool and probe ID.
 
@@ -369,9 +375,9 @@ Ensure that the current directory is  `~/tf_aws_lab/compute`
 
 Change init User Data script (Task 8) as follows:
 
--   Nginx binary should be installed on instance (`port=80`).
+-   Nginx binary should be installed on virtual machine (`port=80`).
 -   Variables RESOURCE_ID and VIRTUAL_MACHINE_UUID should be defined (see Task 8).
--   Nginx default page should be configured to return the same text as we put previously into the storage account in Task 8: "This message was generated on instance ${RESOURCE_ID} with the following UUID ${VIRTUAL_MACHINE_UUID}".
+-   Nginx default page should be configured to return the same text as we put previously into the storage account in Task 8: "This message was generated on virtual machine ${RESOURCE_ID} with the following UUID ${VIRTUAL_MACHINE_UUID}".
 -   Nginx server should be started.
 
 Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
