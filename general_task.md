@@ -352,6 +352,8 @@ Create required resources:
 - Create an `aws_autoscaling_group` resource (`name=epam-tf-lab`, `max_size=min_size=1`, `launch_template=epam-tf-lab`)
 - Create an Application Loadbalancer and attach it to an auto-scaling group with `aws_autoscaling_attachment`. Configure `aws_autoscaling_group` to ignore changes to the `load_balancers` and `target_group_arns` arguments within a lifecycle configuration block (lb_port=80, instance_port=80, protocol=http, `security_group_id={lb-http-inbound-id}`).
 
+**Note:** Please keep in mind that AWS autoscaling group requires using a special format for `Tags` section!
+
 ### For GCP:
 - Create an Instance Template resources for subnetworks' regions (`name=epam-tf-lab-{region}`, `source_image="debian-cloud/debian-10"`, `machine_type=f1-micro`, `tags="web-instances"`, `service_account`, `startup-script`). Public SSH-key should be fetched from the Project Metadata.
 - Create an `google_compute_region_instance_group_manager` resource (`name=epam-gcp-tf-lab-{region}`, `target_size=1`, `instance_template=epam-tf-lab-{region}`)
@@ -370,8 +372,6 @@ Equip all possible resources with following tags or labels:
   - `Terraform=true`, 
   - `Project=epam-tf-lab`
   - `Owner={StudentName}_{StudentSurname}`
-
-**Note:** Please keep in mind that AWS autoscaling group requires using a special format for `Tags` section!
 
 Run `terraform validate` and `terraform fmt` to check if your configuration valid and fits to a canonical format and style. Do this each time before applying your changes.
 Run `terraform plan` to see your changes.
