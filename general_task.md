@@ -34,7 +34,7 @@ After you’ve created configuration, we will work on its optimization like usin
 
 ## PRE-REQUISITES
 1. Fork current repository. A fork is a copy of a project and this allows you to make changes without affecting the original project.
-2. All actions should be done under your fork and Terraform gets it context from your local clone working directory: 
+2. Clone the forked repository to you workstation. All actions should be done under your fork and Terraform gets it context from your local clone working directory: 
     - Change current directory to `/tf-epam-lab/base` folder and create `root.tf` file. 
     - Add a `terraform {}` empty block to this file.
     - For AWS:
