@@ -35,7 +35,7 @@ After you’ve created the configuration, we will work on its optimization like 
 ## PRE-REQUISITES
 1. Fork current repository. A fork is a copy of a project and this allows you to make changes without affecting the original project.
 2. All actions should be done under your fork and Terraform gets it context from your local clone working directory: 
-    - Change current directory to `/tf_aws_lab/base` folder and create `root.tf` file. 
+    - Change current directory to `/tf-epam-lab/base` folder and create `root.tf` file. 
     - Add a `terraform {}`empty block to this file. Create an AWS provider block inside `root.tf` file with the following attributes: 
         - `region = "us-east-1"`
         - `shared_credentials_file = "~/.aws/credentials"`.
@@ -48,14 +48,14 @@ Run `terraform plan` to ensure that there are no changes.
 
 Please use **underscore** Terraform resources naming, e.g. `my_resource` instead of `my-resource`.
 
-3. Change current directory  to `~/tf_aws_lab/compute` and repeat the steps in [2].
+3. Change current directory  to `~/tf-epam-lab/compute` and repeat the steps in [2].
 
 You are ready for the lab!
 
 # Creating Infrastructure
 
 ## TASK 1 - Creating VPC
-Change current directory  to `~/tf_aws_lab/base`
+Change current directory  to `~/tf-epam-lab/base`
 
 Create a network stack for your infrastructure:
 
@@ -69,12 +69,12 @@ Create a network stack for your infrastructure:
 
 **Hint**: A local value assigns a name to an expression, so you can use it multiple times within a module without repeating it. 
 
-Store all resources from this task in the `vpc.tf` file.
+Store all resources from this task in the `network.tf` file.
 Store all locals in `locals.tf`.
 
 Equip all resources with following tags:
     - `Terraform=true`, 
-    - `Project=epam-tf-aws-lab`
+    - `Project=epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
@@ -91,13 +91,13 @@ Apply your changes when you're ready.
 
 ## TASK 2 - Import Your SSH Key into AWS
 
-Ensure that the current directory is `~/tf_aws_lab/base`
+Ensure that the current directory is `~/tf-epam-lab/base`
 
 Create a custom ssh key-pair to access your ec2 instances:
 
 - Create your ssh key pair [refer to this document](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws)
 - Create a `variables.tf` file with empty variable "ssh_key" but with the following description "Provides custom public ssh key". Never store you secrets inside the code!
-- Create a `key_pair.tf` file with `aws_key_pair` resource. Use ssh_key variable as a public key source.
+- Create a `ssh.tf` file with `aws_key_pair` resource. Use ssh_key variable as a public key source.
 - Run `terraform plan` and provide required public key. Observe the output and run `terraform plan` again.
 - To prevent providing ssh key on each configuration run and staying secure set binding environment variable - `export TF_VAR_ssh_key="YOUR_PUBLIC_SSH_KEY_STRING"`
 - Run `terraform plan` and observe the output.
@@ -105,7 +105,7 @@ Create a custom ssh key-pair to access your ec2 instances:
 
 Equip all resources with following tags:
     - `Terraform=true`, 
-    - `Project=epam-tf-aws-lab`
+    - `Project=epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 
@@ -122,16 +122,16 @@ Apply your changes when ready.
 
 ## TASK 3 - Create an S3 Bucket
 
-Ensure that the current directory is  `~/tf_aws_lab/base`
+Ensure that the current directory is  `~/tf-epam-lab/base`
 
 Create an S3 bucket as the storage for your infrastructure:
 
--	Create `s3.tf`. Name your bucket "epam-aws-tf-lab-${random_string.my_numbers.result}" to provide it with partition unique name. See [random_string](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) documentation for details.
+-	Create `storage.tf`. Name your bucket "epam-aws-tf-lab-${random_string.my_numbers.result}" to provide it with partition unique name. See [random_string](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) documentation for details.
 -	Set bucket acl as private. Never share your bucket to the whole world!
 
 Equip all resources with following tags:
     - `Terraform=true`, 
-    - `Project=epam-tf-aws-lab`
+    - `Project=epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
@@ -147,7 +147,7 @@ Apply your changes when ready.
 - Check your efforts through the proctor gitlab pipeline.
 
 ## TASK 4 - Create IAM Resources
-Ensure that the current directory is  `~/tf_aws_lab/base`
+Ensure that the current directory is  `~/tf-epam-lab/base`
 
 Create IAM resources:
 
@@ -159,7 +159,7 @@ Store all resources from this task in the `iam.tf` file.
 
 Equip all resources with following tags:
     - `Terraform=true`, 
-    - `Project=epam-tf-aws-lab`
+    - `Project=epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
@@ -175,7 +175,7 @@ Apply your changes when ready.
 - Check your efforts through the proctor gitlab pipeline.
 
 ## TASK 5 - Create a Security Group
-Ensure that the current directory is  `~/tf_aws_lab/base`
+Ensure that the current directory is  `~/tf-epam-lab/base`
 
 Create the following resources:
 
@@ -184,14 +184,14 @@ Create the following resources:
 -	Security group (`name=http-inbound`, `port=80`, `source_security_group_id=id_of_lb-http-inbound_sg`, `description="allows http access from LoadBalancer"`). 
 -   Make the most of the `aws_security_group_rule` resource. 
 
-**Hint:** source_security_group_id is an attribute of[aws_security_group_rule resource](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule). For details about how to configure securitygroups for loadbalancer see [documentation] (https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-groups.html)
+**Hint:** source_security_group_id is an attribute of[aws_security_group_rule resource](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule). For details about how to configure securitygroups for loadbalancer see [documentation] (https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html)
 
 
-Store all resources from this task in the `sg.tf` file.
+Store all resources from this task in the `network_security.tf` file.
 
 Equip all resources with following tags:
     - `Terraform=true`, 
-    - `Project=epam-tf-aws-lab`
+    - `Project=epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying  your changes.
@@ -207,7 +207,7 @@ Apply your changes when ready.
 - Check your efforts through the proctor gitlab pipeline.
 
 ## TASK 6 - Form TF Output
-Ensure that current directory is  `~/tf_aws_lab/base`
+Ensure that current directory is  `~/tf-epam-lab/base`
 
 Create outputs for your configuration:
 
@@ -230,8 +230,8 @@ Apply your changes when ready. You can update outputs without using `terraform a
 
 Learn about [terraform remote state data source](https://www.terraform.io/docs/language/state/remote-state-data.html).
 
-! Change the current directory to  `~/tf_aws_lab/compute`
-! Copy `root.tf` from `~/tf_aws_lab/base` to `~/tf_aws_lab/compute`
+! Change the current directory to  `~/tf-epam-lab/compute`
+! Copy `root.tf` from `~/tf-epam-lab/base` to `~/tf-epam-lab/compute`
 
 Add remote state resources to your configuration to be able to import output resources:
 
@@ -251,7 +251,7 @@ Apply your changes when ready.
 
 ## TASK 8 - Create EC2/ASG/ELB
 
-Ensure that the current directory is  `~/tf_aws_lab/compute`
+Ensure that the current directory is  `~/tf-epam-lab/compute`
 
 Create auto-scaling group resources:
 
@@ -274,13 +274,13 @@ echo "This message was generated on instance ${INSTANCE_ID} with the following U
 ```
 
 - Create an `aws_autoscaling_group` resource. (`name=epam-aws-tf-lab`,`max_size=min_size=1`,`launch_template=epam-aws-tf-lab`)
-- Create a Classic Loadbalancer and attach it to an auto-scaling group with `aws_autoscaling_attachment`. Configure `aws_autoscaling_group` to ignore changes to the `load_balancers` and `target_group_arns` arguments within a lifecycle configuration block (lb_port=80, instance_port=80, protocol=http, `security_group_id={lb-http-inbound-id}`).
+- Create a Application Loadbalancer and attach it to an auto-scaling group with `aws_autoscaling_attachment`. Configure `aws_autoscaling_group` to ignore changes to the `load_balancers` and `target_group_arns` arguments within a lifecycle configuration block (lb_port=80, instance_port=80, protocol=http, `security_group_id={lb-http-inbound-id}`).
 
-Store all resources from this task in the `asg.tf` file.
+Store all resources from this task in the `application.tf` file.
 
 Equip all resources with following tags:
     - `Terraform=true`, 
-    - `Project=epam-tf-aws-lab`
+    - `Project=epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Please keep in mind that autoscaling group requires using a special format for `Tags` section!
@@ -297,6 +297,7 @@ As a result ec2 instance should be launched by autoscaling-group and a new file 
 
 - Terraform created infrastructure with no errors
 - AWS resources created as expected (check AWS Console)
+- After a new instance launch, a new text file appears in the S3 bucket with the appropriate text.
 - Push *.tf configuration files to git
 - Check your efforts through the proctor gitlab pipeline.
     
@@ -330,7 +331,7 @@ Learn about [terraform state mv](https://www.terraform.io/docs/cli/commands/stat
 You are going to move previously created resource(IAM group) from `base` to `compute` state.
 Hint: Keep in mind that there are 3 instances: AWS resource, Terraform state file which store some state of that resource, and Terraform configuration which describe resource. "Move resource" is moving it between states. Moreover to make it work you should delete said resource from source configuration and add it to the destination configuration (this action is not automated).
 
-- Move the `test-move` IAM group from the `base` state to the `compute` using `terraform state mv` command.
+- Move The created AWS key pair resource from the `base` state to the `compute` using `terraform state mv` command.
 - Update both configurations according to this move.
 - Run `terraform plan` on both configurations and observe the changes. Hint: there should not be any changes detected (no resource creation or deletion in case of correct resource move).
 
@@ -348,16 +349,17 @@ Learn about the [terraform import](https://www.terraform.io/docs/cli/import/inde
 You are going to import a new resource (IAM group) to your state.
 Hint: Keep in mind that there are 3 instances: AWS resource, Terraform state file which store some state of that resource, and Terraform configuration which describe resource. "Importing a resource" is importing its attributes into a Terraform state. Then you have to add said resource to the destination configuration (this action is not automated).
 
-- Create an IAM group in AWS Console(name="test-import").
-- Add a new resource aws_iam_group "test-import" to the `compute` configuration.
+- Create an IAM Role in AWS Console (`name="test-import"`).
+- Add a new resource aws_iam_role `test-import` to the `compute` configuration.
 - Run `terraform plan` to see your changes but do not apply changes.
-- Import `test-import` IAM group to the `compute` state.
+- Import `test-import` IAM role to the `compute` state.
 - Run `terraform plan` again to ensure that import was successful.
 
 Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style.
-If applicable all resources should be tagged with following tags {Terraform=true, Project=epam-tf-aws-lab}.
+If applicable all resources should be tagged with following tags:
+- `Terraform=true`,
+- `Project=epam-tf-lab`.
 If applicable all resources should be defined with the provider alias.
-
 
 - Terraform imported resources with no errors
 - AWS resources are NOT changed (check AWS Console)
@@ -368,10 +370,11 @@ Learn about [terraform data sources](https://www.terraform.io/docs/language/data
 In this task we are going to use a data driven approach instead to use remote state data source.
 
 #### base configuration
-Change current directory to `~/tf_aws_lab/base`
-Refine your configuration :
+Change current directory to `~/tf-epam-lab/base`
 
-- Use a data source to request Availability zones for us-east-1 region and assign your vpc with appropriate AZs. Hint: select such AZ numbers that will not initiate resource recreation and were already assigned to your VPC.
+Refine your configuration :
+- Use a data source to request a project numeric ID and , 
+- Use a data source to request a region for the provider.
 
 Store all resources from this task in the `data.tf` file.
 
@@ -382,7 +385,7 @@ If applicable all resources should be defined with the provider alias.
 Apply your changes when ready.
 
 #### compute configuration
-Change the current directory to `~/tf_aws_lab/compute`
+Change the current directory to `~/tf-epam-lab/compute`
 
 Refine your configuration:
 
@@ -404,7 +407,7 @@ Apply your changes when ready.
 
 ## TASK 13 - Expose node output with nginx
 
-Ensure that the current directory is  `~/tf_aws_lab/compute`
+Ensure that the current directory is  `~/tf-epam-lab/compute`
 
 Change User Data script in the Launch Template as follows:
 
@@ -422,7 +425,7 @@ Apply your changes when ready.
 
 - Terraform created infrastructure with no errors
 - AWS resources created as expected (check AWS Console)
-- Nginx server responds on Loadbalancer's IP Address with expected response 
+- Nginx server responds on Loadbalancer's URL with expected response 
 
 ## TASK 14 - Modules
 
@@ -436,7 +439,7 @@ Refine your configurations:
 - [Optional] Refine `compute` configuration by creating Autoscaling group module.
 
 
-Store your modules in `~/tf_aws_lab/modules/` subfolders.
+Store your modules in `~/tf-epam-lab/modules/` subfolders.
 
 Run `terraform validate` and `terraform fmt` to check if your modules are valid and fit to a canonical format and style.
 Run `terraform plan` to see your changes and re-apply your changes if needed.

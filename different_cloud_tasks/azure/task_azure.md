@@ -2,9 +2,9 @@
   * [Explanation of the Solution](task_azure.md#explanation-of-the-solution)
   * [PRE-REQUISITES](task_azure.md#pre-requisites)
 - [Creating Infrastructure](task_azure.md#creating-infrastructure)
-  * [TASK 1 - Create Resource Group](task_azure.md#task-1-create-resource-group)
-  * [TASK 2 - Creating Virtual Network](task_azure.md#task-2-creating-virtual-network)
-  * [TASK 3 - Create a Storage account with a Storage Container](task_azure.md#task-3-create-a-storage-account-with-a-storage-container)
+  * [TASK 1 - Creating Virtual Network](task_azure.md#task-1-creating-virtual-network)
+  * [TASK 2 - Create a Storage account with a Storage Container](task_azure.md#task-2-create-a-storage-account-with-a-storage-container)
+  * [TASK 3 - Create resources for SSH Authentication](task_azure.md#task-3-create-resources-for-ssh-authentication)
   * [TASK 4 - Create IAM resources](task_azure.md#task-4-create-iam-resources)
   * [TASK 5 - Create a Network Security Group](task_azure.md#task-5-create-a-network-security-group)
   * [TASK 6 - Form TF Output](task_azure.md#task-6-form-tf-output)
@@ -37,7 +37,7 @@ After you’ve created configuration, we will work on its optimization like usin
 2. All actions should be done under your fork and Terraform gets it context from your local clone working directory:
     - Install Azure CLI (for Linux) or Azure PowerShell module (for Windows).
     - Perform authentication with command `az login` or `Connect-AzAccount` (for PowerShell)
-    - Change current directory to `/tf_aws_lab/base` folder and create `root.tf` file. 
+    - Change current directory to `/tf-epam-lab/base` folder and create `root.tf` file. 
     - Add a `terraform {}` empty block to this file. Create an Azure provider block inside `root.tf`.
 
 **Hint**: There are other ways to authenticate terraform provider before the usage. Refer to [this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs) document for details.
@@ -48,56 +48,28 @@ Run `terraform plan` to ensure that there are no changes.
 
 Please use **underscore** Terraform resources naming, e.g. `my_resource` instead of `my-resource`.
 
-3. Change current directory  to `~/tf_aws_lab/compute` and repeat the steps in [2].
+3. Change current directory  to `~/tf-epam-lab/compute` and repeat the steps in [2].
 
 You are ready for the lab!
 
 # Creating Infrastructure
-## TASK 1 - Create Resource Group
-Change current directory  to `~/tf_aws_lab/base`
-
-Create a resource group for your infrastructure: `name={StudentName}-{StudentSurname}-01`
-
-**IMPORTALNT**: All newly created resources shold be created withing this resource group.
-
-**Hint**: A local value assigns a name to an expression, so you can use it multiple times within a module without repeating it. 
-
-Store all resources from this task in the `rg.tf` file.
-Store all locals in `locals.tf`.
-
-Equip all resources with following tags:
-    - `Terraform=true`, 
-    - `Project=epam-tf-azure-lab`
-    - `Owner={StudentName}_{StudentSurname}`
-
-Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
-Run `terraform plan` to see your changes.
-
-Apply your changes when you're ready.
-
-### Definition of DONE:
-
-- Terraform created infrastructure with no errors
-- Azure resources created as expected (check Azure Portal)
-- Push *.tf configuration files to git
-
-## TASK 2 - Creating Virtual Network
-Change current directory  to `~/tf_aws_lab/base`
+## TASK 1 - Creating Virtual Network
+Change current directory  to `~/tf-epam-lab/base`
 
 Create a network stack for your infrastructure:
 
-
+- **Resource Group**: `name={StudentName}-{StudentSurname}-01`
 -	**Virtual Network**: `name={StudentName}-{StudentSurname}-01-vnet-us-central`, `cidr=10.10.0.0/16`, `location="centralus"`
 -	**Subnets**: `name={StudentName}-{StudentSurname}-01-subnet`, `cidr=10.10.1.0/24`)
 
 **Hint**: A local value assigns a name to an expression, so you can use it multiple times within a module without repeating it. 
 
-Store all resources from this task in the `vnet.tf` file.
+Store all resources from this task in the `network.tf` file.
 Store all locals in `locals.tf`.
 
 Equip all resources with following tags:
     - `Terraform=true`, 
-    - `Project=epam-tf-azure-lab`
+    - `Project=epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
@@ -111,9 +83,9 @@ Apply your changes when you're ready.
 - Azure resources created as expected (check Azure Portal)
 - Push *.tf configuration files to git
 
-## TASK 3 - Create a Storage account with a Storage Container
+## TASK 2 - Create a Storage account with a Storage Container
 
-Ensure that the current directory is  `~/tf_aws_lab/base`
+Ensure that the current directory is  `~/tf-epam-lab/base`
 
 Create a storage account. For this storage account create a storage container as the storage for your infrastructure:
 
@@ -122,7 +94,7 @@ Create a storage account. For this storage account create a storage container as
 
 Equip a storage account with following tags:
     - `Terraform=true`, 
-    - `Project=epam-tf-azure-lab`
+    - `Project=epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
@@ -136,8 +108,43 @@ Apply your changes when ready.
 - Azure resources created as expected (check Azure Portal)
 - Push *.tf configuration files to git
 
+## TASK 3 - Create resources for SSH Authentication
+
+Ensure that the current directory is `~/tf-epam-lab/base`
+
+Create a custom ssh key-pair to access your virtual machines:
+
+- Create your ssh key pair.
+- Create a `variables.tf` file with empty variable `ssh_key` but with the following description `Provides custom public ssh key`. 
+- Create a `ssh.tf` file for SSH resources. Use `ssh_key` variable as a public key source.
+- Create `azurerm_ssh_public_key` resource with the name `epam-tf-ssh-key`. 
+  
+  **Note** : Despite the fact that a public SSH key is not a secret, in terms of this lab you should not store it in the repository. The public key should be passed as an environment variable:
+  
+    `export TF_VAR_ssh_key="YOUR_PUBLIC_SSH_KEY_STRING"`
+
+  Never store you secrets inside the code!
+
+- Run `terraform plan` and observe the output.
+
+Equip all possible resources with following tags or labels:
+  - `Terraform=true`, 
+  - `Project=epam-tf-lab`
+  - `Owner={StudentName}_{StudentSurname}`
+
+Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
+
+Apply your changes when ready.
+
+### Definition of DONE:
+
+- Terraform created infrastructure with no errors
+- All resources created as expected (check Cloud WebUI)
+- Push *.tf configuration files to git
+- Check your efforts through the proctor gitlab pipeline (if a pipeline configured)
+
 ## TASK 4 - Create IAM resources
-Ensure that the current directory is  `~/tf_aws_lab/base`
+Ensure that the current directory is  `~/tf-epam-lab/base`
 
 Create IAM resources:
 
@@ -149,7 +156,7 @@ Store all resources from this task in the `iam.tf` file.
 
 Equip all possible resources with following tags:
     - `Terraform=true`, 
-    - `Project=epam-tf-azure-lab`
+    - `Project=epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
@@ -164,7 +171,7 @@ Apply your changes when ready.
 - Push *.tf configuration files to git
 
 ## TASK 5 - Create a Network Security Group
-Ensure that the current directory is  `~/tf_aws_lab/base`
+Ensure that the current directory is  `~/tf-epam-lab/base`
 
 Create the Network security group with name `lab-inbound`.
 
@@ -175,11 +182,11 @@ For the created network security group create rules:
 **Hint:** `network_security_group_name` is an attribute of [azurerm_network_security_rule resource](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule). For details about how to configure securitygroups for loadbalancer see [documentation] (https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview)
 
 
-Store all resources from this task in the `nsg.tf` file.
+Store all resources from this task in the `network_security.tf` file.
 
 Equip all possible resources with following tags:
     - `Terraform=true`, 
-    - `Project=epam-tf-azure-lab`
+    - `Project=epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying  your changes.
@@ -194,7 +201,7 @@ Apply your changes when ready.
 - Push *.tf configuration files to git
 
 ## TASK 6 - Form TF Output
-Ensure that current directory is  `~/tf_aws_lab/base`
+Ensure that current directory is  `~/tf-epam-lab/base`
 
 Create outputs for your configuration:
 
@@ -217,8 +224,8 @@ Apply your changes when ready. You can update outputs without using `terraform a
 
 Learn about [terraform remote state data source](https://www.terraform.io/docs/language/state/remote-state-data.html).
 
-! Change the current directory to  `~/tf_aws_lab/compute`
-! Copy `root.tf` from `~/tf_aws_lab/base` to `~/tf_aws_lab/compute`
+! Change the current directory to  `~/tf-epam-lab/compute`
+! Copy `root.tf` from `~/tf-epam-lab/base` to `~/tf-epam-lab/compute`
 
 Add remote state resources to your configuration to be able to import output resources:
 
@@ -238,7 +245,7 @@ Apply your changes when ready.
 
 ## TASK 8 - Create Virtual Machine/Scale Set/Load Balancer
 
-Ensure that the current directory is  `~/tf_aws_lab/compute`
+Ensure that the current directory is  `~/tf-epam-lab/compute`
 
 Create an init script with User Data.
 
@@ -261,18 +268,17 @@ Create resources:
 - Create `azurerm_lb` resource (`name="epam-azure-tf-lab"`, with `frontend_ip_configuration` with reference on the created public IP address)
 - Create `azurerm_lb_backend_address_pool` resource  with reference on the created load balancer
 
-- Create an `azurerm_linux_virtual_machine_scale_set` resource. (`name="epam-azure-tf-lab"`,`instances=2`,`sku="Standard_F2"`, `custom_data=base64encode("{init_script_file}")`, source_image_reference with `publisher="Canonical"`, `offer="UbuntuServer"`, `sku="20.04-LTS"`, `version="latest"`). The network interface of future virtual machines should be in the previously created subnet with the previosly created network security group. Authentication should be through login and password. The login and password should be provided as a variable. This scale set should be a part of the previosly cretaed backend address pool. **Note** The virtual machines in the scale set should have assigned the identity which was created in the task 5
+- Create an `azurerm_linux_virtual_machine_scale_set` resource. (`name="epam-azure-tf-lab"`,`instances=2`,`sku="Standard_F2"`, `custom_data=base64encode("{init_script_file}")`, source_image_reference with `publisher="Canonical"`, `offer="UbuntuServer"`, `sku="20.04-LTS"`, `version="latest"`). The network interface of future virtual machines should be in the previously created subnet with the previosly created network security group. Authentication should be through created SSH key. This scale set should be a part of the previosly cretaed backend address pool. **Note** The virtual machines in the scale set should have assigned the identity which was created in the task 5
 
-**Hint**: To prevent providing password on each configuration run and staying secure set binding environment variable - `export TF_VAR_password="YOUR_PASSWORD"`
 
 - Create `azurerm_lb_probe` (`name="epam-azure-tf-lab"`, `protocol="Http"`, `port=80`, `request_path="/"`)
 - Create `azurerm_lb_rule` (`protocol="Tcp"`, `frontend_port=80`, `backend_port=80`) with reference to the previosly created frontend IP configuration name, IDs of the backend address pool and probe ID.
 
-Store all resources from this task in the `web.tf` file.
+Store all resources from this task in the `application.tf` file.
 
 Equip all possible resources with following tags:
     - `Terraform=true`, 
-    - `Project=epam-tf-azure-lab`
+    - `Project=epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate` and `terraform fmt` to check if your configuration valid and fits to a canonical format and style. Do this each time before applying your changes.
@@ -286,6 +292,7 @@ As a result virtual machines should be launched by the scale set and a new file 
 
 - Terraform created infrastructure with no errors
 - Azure resources created as expected (check Azure Portal)
+- After a new instance launch, a new text file appears in the storage container storage with the appropriate text.
 - Push *.tf configuration files to git
     
 # Working with Terraform state
@@ -316,7 +323,7 @@ Learn about [terraform state mv](https://www.terraform.io/docs/cli/commands/stat
 You are going to move previously created resource(SSH Key) from `base` to `compute` state.
 Hint: Keep in mind that there are 3 instances: Azure resource, Terraform state file which store some state of that resource, and Terraform configuration which describe resource. "Move resource" is moving it between states. Moreover to make it work you should delete said resource from source configuration and add it to the destination configuration (this action is not automated).
 
-- Move the `test-move` SSH key from the `base` state to the `compute` using `terraform state mv` command.
+- Move the Azure SSH public Key resource from the `base` state to the `compute` using `terraform state mv` command.
 - Update both configurations according to this move.
 - Run `terraform plan` on both configurations and observe the changes. Hint: there should not be any changes detected (no resource creation or deletion in case of correct resource move).
 
@@ -334,16 +341,17 @@ Learn about the [terraform import](https://www.terraform.io/docs/cli/import/inde
 You are going to import a new resource (Resource group) to your state.
 Hint: Keep in mind that there are 3 instances: Azure resource, Terraform state file which store some state of that resource, and Terraform configuration which describe resource. "Importing a resource" is importing its attributes into a Terraform state. Then you have to add said resource to the destination configuration (this action is not automated).
 
-- Create an Resource group in Azure Portal (name="test-import").
-- Add a new resource `azurerm_resource_group` "test-import" to the `compute` configuration.
+- Create a User Managed Identity in Azure Portal (`name="test-import"`).
+- Add a new resource `azurerm_user_assigned_identity` `test-import` to the `compute` configuration.
 - Run `terraform plan` to see your changes but do not apply changes.
-- Import `test-import` IAM group to the `compute` state.
+- Import `test-import` User Managed Identity to the `compute` state.
 - Run `terraform plan` again to ensure that import was successful.
 
 Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style.
-If applicable all resources should be tagged with following tags {Terraform=true, Project=epam-tf-azure-lab}.
+If applicable all resources should be tagged with following tags:
+- `Terraform=true`,
+- `Project=epam-tf-lab`.
 If applicable all resources should be defined with the provider alias.
-
 
 - Terraform imported resources with no errors
 - Azure resources are NOT changed (check Azure Portal)
@@ -353,11 +361,12 @@ Learn about [terraform data sources](https://www.terraform.io/docs/language/data
 
 In this task we are going to use a data driven approach instead to use remote state data source.
 
-#### compute configuration
-Change current directory to `~/tf_aws_lab/compute`
-Refine your configuration :
+#### base configuration
+Change current directory to `~/tf-epam-lab/base`
 
-- Use a data source to request resource group created in the `~/tf_aws_lab/base` and assign it to your resources.
+Refine your configuration :
+- Use a data source to request a Subscription ID, 
+- Use a data source to request a Client ID of the current user.
 
 Store all resources from this task in the `data.tf` file.
 
@@ -371,7 +380,7 @@ Apply your changes when ready.
 
 ## TASK 13 - Expose node output with nginx
 
-Ensure that the current directory is  `~/tf_aws_lab/compute`
+Ensure that the current directory is  `~/tf-epam-lab/compute`
 
 Change init User Data script (Task 8) as follows:
 
@@ -403,7 +412,7 @@ Refine your configurations:
 - [Optional] Refine `compute` configuration by creating a scale set module.
 
 
-Store your modules in `~/tf_aws_lab/modules/` subfolders.
+Store your modules in `~/tf-epam-lab/modules/` subfolders.
 
 Run `terraform validate` and `terraform fmt` to check if your modules are valid and fit to a canonical format and style.
 Run `terraform plan` to see your changes and re-apply your changes if needed.

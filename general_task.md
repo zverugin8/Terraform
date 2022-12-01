@@ -35,7 +35,7 @@ After you’ve created configuration, we will work on its optimization like usin
 ## PRE-REQUISITES
 1. Fork current repository. A fork is a copy of a project and this allows you to make changes without affecting the original project.
 2. All actions should be done under your fork and Terraform gets it context from your local clone working directory: 
-    - Change current directory to `/tf_epam_lab/base` folder and create `root.tf` file. 
+    - Change current directory to `/tf-epam-lab/base` folder and create `root.tf` file. 
     - Add a `terraform {}` empty block to this file.
     - For AWS:
       - Create an AWS provider block inside `root.tf` file with the following attributes: 
@@ -66,14 +66,14 @@ Run `terraform plan` to ensure that there are no changes.
 
 Please use **underscore** Terraform resources naming, e.g. `my_resource` instead of `my-resource`.
 
-3. Change current directory  to `~/tf_epam_lab/compute` and repeat the steps in [2].
+3. Change current directory  to `~/tf-epam-lab/compute` and repeat the steps in [2].
 
 You are ready for the lab!
 
 # Creating Infrastructure
 
 ## TASK 1 - Creating Network Resources
-Change current directory  to `~/tf_epam_lab/base`
+Change current directory  to `~/tf-epam-lab/base`
 
 Create a network stack for your infrastructure:
 
@@ -125,7 +125,7 @@ Apply your changes when you're ready.
 
 ## TASK 2 - Create an Object Storage
 
-Ensure that the current directory is  `~/tf_epam_lab/base`
+Ensure that the current directory is  `~/tf-epam-lab/base`
 
 Create an object bucket as the storage for your infrastructure:
 
@@ -162,7 +162,7 @@ Apply your changes when ready.
 
 ## TASK 3 - Create resources for SSH Authentication
 
-Ensure that the current directory is `~/tf_epam_lab/base`
+Ensure that the current directory is `~/tf-epam-lab/base`
 
 Create a custom ssh key-pair to access your cloud compute instances:
 
@@ -203,7 +203,7 @@ Apply your changes when ready.
 
 
 ## TASK 4 - Create IAM Resources
-Ensure that the current directory is  `~/tf_epam_lab/base`
+Ensure that the current directory is  `~/tf-epam-lab/base`
 
 Create IAM resources:
 - Create an `iam.tf` file. Create IAM resources there.
@@ -240,7 +240,7 @@ Apply your changes when ready.
 - Check your efforts through the proctor gitlab pipeline (if a pipeline configured)
 
 ## TASK 5 - Configure Network Security
-Ensure that the current directory is  `~/tf_epam_lab/base`
+Ensure that the current directory is  `~/tf-epam-lab/base`
 
 Store all resources from this task in the `network_security.tf` file.
 Create the following resources:
@@ -250,7 +250,7 @@ Create the following resources:
 -	Security group (`name=http-inbound`, `port=80`, `source_security_group_id=id_of_lb-http-inbound_sg`, `description="allows http access from LoadBalancer"`). 
 - Make the most of the `aws_security_group_rule` resource.
 
-**Hint:** source_security_group_id is an attribute of[aws_security_group_rule resource](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule). For details about how to configure securitygroups for loadbalancer see [documentation] (https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-groups.html)
+**Hint:** source_security_group_id is an attribute of[aws_security_group_rule resource](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule). For details about how to configure securitygroups for loadbalancer see [documentation] (https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html)
 
 ### For GCP:
 -	Firewall rule (`name=ssh-inbound`, `port=22`, `allowed_ip_ranges="your_IP or EPAM_office-IP_ranges"`, `description="allows ssh access from safe IP-range"`, `target_tags=web-instances`).
@@ -285,7 +285,7 @@ Apply your changes when ready.
 
 
 ## TASK 6 - Form TF Output
-Ensure that current directory is  `~/tf_epam_lab/base`
+Ensure that current directory is  `~/tf-epam-lab/base`
 
 Create outputs for your configuration:
 
@@ -311,8 +311,8 @@ Apply your changes when ready. You can update outputs without using `terraform a
 
 Learn about [terraform remote state data source](https://www.terraform.io/docs/language/state/remote-state-data.html).
 
-! Change the current directory to  `~/tf_epam_lab/compute`
-! Copy `root.tf` from `~/tf_epam_lab/base` to `~/tf_epam_lab/compute`
+! Change the current directory to  `~/tf-epam-lab/compute`
+! Copy `root.tf` from `~/tf-epam-lab/base` to `~/tf-epam-lab/compute`
 
 Add remote state resources to your configuration to be able to import output resources:
 
@@ -332,7 +332,7 @@ Apply your changes when ready.
 
 ## TASK 8 - Configure application instances behind a Load Balancer
 
-Ensure that the current directory is  `~/tf_epam_lab/compute`.
+Ensure that the current directory is  `~/tf-epam-lab/compute`.
 
 Store all resources from this task in the `application.tf` file.
 
@@ -384,6 +384,7 @@ As a result, each time a cloud compute instance launches a new file should be cr
 
 - Terraform created infrastructure with no errors
 - All resources created as expected (check Cloud WebUI)
+- After a new instance launch, a new text file appears in the cloud object storage with the appropriate text.
 - Push *.tf configuration files to git
 - Check your efforts through the proctor gitlab pipeline (if a pipeline configured)
     
@@ -489,7 +490,7 @@ Learn about [terraform data sources](https://www.terraform.io/docs/language/data
 In this task we are going to use a data driven approach instead to use remote state data source.
 
 #### base configuration
-Change current directory to `~/tf_epam_lab/base`
+Change current directory to `~/tf-epam-lab/base`
 
 Refine your configuration :
 - Use a data source to request
@@ -509,11 +510,11 @@ If applicable all resources should be defined with the provider alias.
 Apply your changes when ready.
 
 #### compute configuration
-Change the current directory to `~/tf_epam_lab/compute`
+Change the current directory to `~/tf-epam-lab/compute`
 
 Refine your configuration:
 
-- Use a data source to request resource group created in the `~/tf_epam_lab/base` and assign it to your resources.
+- Use a data source to request resource group created in the `~/tf-epam-lab/base` and assign it to your resources.
 
 Hint: These data sources should replace remote state outputs, therefore you can delete `data "terraform_remote_state" "base"` resource from your current state and the `outputs.tf` file from the `base` configuration. **Don't forget to replace references with a new data sources.**
 
@@ -532,7 +533,7 @@ Apply your changes when ready.
 
 ## TASK 13 - Expose node output with nginx
 
-Ensure that the current directory is  `~/tf_epam_lab/compute`
+Ensure that the current directory is  `~/tf-epam-lab/compute`
 
 Change init script in the task 8 as follows:
 
@@ -550,7 +551,7 @@ Apply your changes when ready.
 
 - Terraform created infrastructure with no errors
 - All resources are NOT changed (check Cloud WebUI)
-- Nginx server responds on Loadbalancer's IP Address with expected response 
+- Nginx server responds on Loadbalancer's URL (for AWS) or IP Address (for GCP and Azure) with expected response.
 
 ## TASK 14 - Modules
 
@@ -564,7 +565,7 @@ Refine your configurations:
 - [Optional] Refine `compute` configuration by creating application resources behind a Load Balancer.
 
 
-Store your modules in `~/tf_epam_lab/modules/` subfolders.
+Store your modules in `~/tf-epam-lab/modules/` subfolders.
 
 Run `terraform validate` and `terraform fmt` to check if your modules are valid and fit to a canonical format and style.
 Run `terraform plan` to see your changes and re-apply your changes if needed.

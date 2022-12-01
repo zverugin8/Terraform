@@ -36,7 +36,7 @@ After you’ve created the configuration, we will work on its optimization like 
 1. Fork current repository. A fork is a copy of a project and this allows you to make changes without affecting the original project.
 2. All actions should be done under your fork and Terraform gets it context from your local clone working directory: 
     - Prepare GCP environment: create a GCP project, create a service account, grant `Project Owner` permissions and generate credentials in the JSON format.
-    - Change current directory to `/tf_aws_lab/base` folder and create `root.tf` file. 
+    - Change current directory to `/tf-epam-lab/base` folder and create `root.tf` file. 
     - Add a `terraform {}`empty block to this file. Create a GCP provider block inside `root.tf` file with the following attributes: 
         - `project = jsondecode(file("~/.gcp/credentials.json"))["project_id"]`
         - `credentials = file("~/.gcp/credentials.json")`.
@@ -49,14 +49,14 @@ Run `terraform plan` to ensure that there are no changes.
 
 Please use **underscore** Terraform resources naming, e.g. `my_resource` instead of `my-resource`.
 
-3. Change current directory  to `~/tf_aws_lab/compute` and repeat the steps in [2].
+3. Change current directory  to `~/tf-epam-lab/compute` and repeat the steps in [2].
 
 You are ready for the lab!
 
 # Creating Infrastructure
 
 ## TASK 1 - Creating VPC
-Change current directory  to `~/tf_aws_lab/base`
+Change current directory  to `~/tf-epam-lab/base`
 
 Create a network stack for your infrastructure:
 
@@ -67,7 +67,7 @@ Create a network stack for your infrastructure:
 
 **Hint**: A local value assigns a name to an expression, so you can use it multiple times within a module without repeating it. 
 
-Store all resources from this task in the `vpc.tf` file.
+Store all resources from this task in the `network.tf` file.
 Store all locals in `locals.tf`.
 
 Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
@@ -83,7 +83,7 @@ Apply your changes when you're ready.
 
 ## TASK 2 - Create a Cloud Storage Bucket
 
-Ensure that the current directory is  `~/tf_aws_lab/base`
+Ensure that the current directory is  `~/tf-epam-lab/base`
 
 Create a Cloud Storage bucket as the storage for your infrastructure:
 
@@ -92,7 +92,7 @@ Create a Cloud Storage bucket as the storage for your infrastructure:
 
 Equip the bucket with following labels:
     - `Terraform=true`, 
-    - `Project=epam-tf-gcp-lab`
+    - `epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
@@ -108,13 +108,13 @@ Apply your changes when ready.
 
 ## TASK 3 - Create a project metadata
 
-Ensure that the current directory is `~/tf_aws_lab/base`
+Ensure that the current directory is `~/tf-epam-lab/base`
 
 Create a project metadata:
 
 - Create a project metadata refer to [this document](https://cloud.google.com/compute/docs/metadata/overview) and [this document](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_project_metadata).
 - Create a `variables.tf` file with empty variable `ssh_key` but with the following description "Provides custom public ssh key". Never store you secrets inside the code!
-- Create a `metafata.tf` file with `google_compute_project_metadata` resource. Create a metadata item key `shared_ssh_key`, as a value use an `ssh_key` variable as a public key source.
+- Create a `ssh.tf` file with `google_compute_project_metadata` resource. Create a metadata item key `shared_ssh_key`, as a value use an `ssh_key` variable as a public key source.
 - Run `terraform plan` and provide required public key. Observe the output and run `terraform plan` again.
 - To prevent providing ssh key on each configuration run and staying secure set binding environment variable - `export TF_VAR_ssh_key="YOUR_PUBLIC_SSH_KEY_STRING"`
 - Run `terraform plan` and observe the output.
@@ -131,7 +131,7 @@ Apply your changes when ready.
 
 
 ## TASK 4 - Create IAM Resources
-Ensure that the current directory is  `~/tf_aws_lab/base`
+Ensure that the current directory is  `~/tf-epam-lab/base`
 
 Create IAM resources:
 
@@ -151,7 +151,7 @@ Apply your changes when ready.
 - Push *.tf configuration files to git
 
 ## TASK 5 - Create Firewall rules
-Ensure that the current directory is  `~/tf_aws_lab/base`
+Ensure that the current directory is  `~/tf-epam-lab/base`
 
 Create the following resources:
 
@@ -161,11 +161,11 @@ Create the following resources:
 **Hint:** These firewall should be created for the VPC which was created in the Task 1
 **Note:** "130.211.0.0/22", "35.191.0.0/16" are IP ranges of the GCP health checkers. See [there](https://cloud.google.com/load-balancing/docs/firewall-rules)
 
-Store all resources from this task in the `firewall.tf` file.
+Store all resources from this task in the `network_security.tf` file.
 
 Equip all resources with following labels:
 - `Terraform=true`, 
-- `Project=epam-tf-gcp-lab`
+- `Project=epam-tf-lab`
 - `Owner={StudentName}_{StudentSurname}`
 
 Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying  your changes.
@@ -180,7 +180,7 @@ Apply your changes when ready.
 - Push *.tf configuration files to git
 
 ## TASK 6 - Form TF Output
-Ensure that current directory is  `~/tf_aws_lab/base`
+Ensure that current directory is  `~/tf-epam-lab/base`
 
 Create outputs for your configuration:
 
@@ -202,8 +202,8 @@ Apply your changes when ready. You can update outputs without using `terraform a
 
 Learn about [terraform remote state data source](https://www.terraform.io/docs/language/state/remote-state-data.html).
 
-! Change the current directory to  `~/tf_aws_lab/compute`
-! Copy `root.tf` from `~/tf_aws_lab/base` to `~/tf_aws_lab/compute`
+! Change the current directory to  `~/tf-epam-lab/compute`
+! Copy `root.tf` from `~/tf-epam-lab/base` to `~/tf-epam-lab/compute`
 
 Add remote state resources to your configuration to be able to import output resources:
 
@@ -222,7 +222,7 @@ Apply your changes when ready.
 
 ## TASK 8 - Create VM Instance/Instance Group/Load Balancer
 
-Ensure that the current directory is  `~/tf_aws_lab/compute`
+Ensure that the current directory is  `~/tf-epam-lab/compute`
 
 Create instance groups resources for subnetworks' regions:
 
@@ -257,11 +257,11 @@ echo "This message was generated on instance ${INSTANCE_ID} with the following U
   - `instance_template=epam-gcp-tf-lab-{region}`
 - Create a Global HTTP Loadbalancer and attach it to an instance group with `google_compute_health_check`.
 
-Store all resources from this task in the `instance_group.tf` file.
+Store all resources from this task in the `application.tf` file.
 
 Ensure that all instances in the instance groups contain:
     - `Terraform=true`, 
-    - `Project=epam-tf-gcp-lab`
+    - `Project=epam-tf-lab`
     - `Owner={StudentName}_{StudentSurname}`
 
 Please keep in mind that instance groups or an instance templates require using a special format for `labels` section!
@@ -277,6 +277,7 @@ As a result vm instance should be launched by the instance groups and a new file
 
 - Terraform created infrastructure with no errors
 - GCP resources created as expected (check GCP Console)
+- After a new instance launch, a new text file appears in the cloud storage bucket storage with the appropriate text.
 - Push *.tf configuration files to git
 
 # Working with Terraform state
@@ -308,7 +309,7 @@ Learn about [terraform state mv](https://www.terraform.io/docs/cli/commands/stat
 You are going to move previously created resource (Cloud Storage Bucket) from `base` to `compute` state.
 Hint: Keep in mind that there are 3 instances: GCP resource, Terraform state file which store some state of that resource, and Terraform configuration which describe resource. "Move resource" is moving it between states. Moreover to make it work you should delete said resource from source configuration and add it to the destination configuration (this action is not automated).
 
-- Move the `test-move` IAM group from the `base` state to the `compute` using `terraform state mv` command.
+- Move the created project metadata resource from the `base` state to the `compute` using `terraform state mv` command.
 - Update both configurations according to this move.
 - Run `terraform plan` on both configurations and observe the changes. Hint: there should not be any changes detected (no resource creation or deletion in case of correct resource move).
 
@@ -326,14 +327,16 @@ Learn about the [terraform import](https://www.terraform.io/docs/cli/import/inde
 You are going to import a new resource (Cloud Storage Bucket) to your state.
 Hint: Keep in mind that there are 3 instances: GCP resource, Terraform state file which store some state of that resource, and Terraform configuration which describe resource. "Importing a resource" is importing its attributes into a Terraform state. Then you have to add said resource to the destination configuration (this action is not automated).
 
-- Create a Cloud Storage Bucket in GCP Console(the name should be globally unique). 
-- Add a new resource `google_storage_bucket` "test_import" to the `compute` configuration.
+- Create a IAM Service account in GCP Console (`name="test-import"`).
+- Add a new resource `google_service_account` `test_import` to the `compute` configuration.
 - Run `terraform plan` to see your changes but do not apply changes.
-- Import `test_import` IAM group to the `compute` state.
+- Import `test_import` IAM Service account to the `compute` state.
 - Run `terraform plan` again to ensure that import was successful.
 
 Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style.
-If applicable all resources should be labeled with following labels {Terraform=true, Project=epam-tf-gcp-lab}.
+If applicable all resources should be labeled with following labels: 
+- `Terraform=true`, 
+- `Project=epam-tf-lab`.
 If applicable all resources should be defined with the provider alias.
 
 - Terraform imported resources with no errors
@@ -344,26 +347,12 @@ Learn about [terraform data sources](https://www.terraform.io/docs/language/data
 
 In this task we are going to use a data driven approach instead to use remote state data source.
 
-#### compute configuration (example 1)
-Change current directory to `~/tf_aws_lab/compute`
+#### base configuration
+Change current directory to `~/tf-epam-lab/base`
+
 Refine your configuration :
-
-- Use a data source to request compute zones for us-east1 and us-central1 regions and assign your instance templates with appropriate AZs. 
-
-Store all resources from this task in the `data.tf` file.
-
-Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
-Run `terraform plan` to see your changes. You can also use `terraform refresh`.
-If applicable all resources should be defined with the provider alias.
-
-Apply your changes when ready.
-
-#### compute configuration (example 2)
-Change the current directory to `~/tf_aws_lab/compute`
-
-Refine your configuration:
-
-- Use a data source to request the following resources: `vpc_id`, `subnetworks_ids`, `service_account_email`, `project_metadata_id`, `bucket_id`
+- Use a data source to request an account ID,
+- Use a data source to request a region operate under.
 
 Hint: These data sources should replace remote state outputs, therefore you can delete `data "terraform_remote_state" "base"` resource from your current state and the `outputs.tf` file from the `base` configuration. **Don't forget to replace references with a new data sources.**
 Hint: run `terraform refresh` command under `base` configuration to reflect changes.
@@ -381,7 +370,7 @@ Apply your changes when ready.
 
 ## TASK 13 - Expose node output with nginx
 
-Ensure that the current directory is  `~/tf_aws_lab/compute`
+Ensure that the current directory is  `~/tf-epam-lab/compute`
 
 Change User Data script in the Instance Template as follows:
 
@@ -413,7 +402,7 @@ Refine your configurations:
 - [Optional] Refine `compute` configuration by creating instance groups module.
 
 
-Store your modules in `~/tf_aws_lab/modules/` subfolders.
+Store your modules in `~/tf-epam-lab/modules/` subfolders.
 
 Run `terraform validate` and `terraform fmt` to check if your modules are valid and fit to a canonical format and style.
 Run `terraform plan` to see your changes and re-apply your changes if needed.

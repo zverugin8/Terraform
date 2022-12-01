@@ -3,9 +3,9 @@
 
 |Task|AWS|GCP|Azure|General Task|
 |-------|-------|-------|-------|-------|
-|Task 1|Creating VPC|Creating VPC|Create Resource Group|Creating Network Resources|
-|Task 2|Import Your SSH Key into AWS|Create a Cloud Storage Bucket|Creating Virtual Network|Create an Object Storage|
-|Task 3|Create an S3 Bucket|Create a project metadata|Create a Storage account with a Storage Container|Create resources for SSH Authentication|
+|Task 1|Creating VPC|Creating VPC|Creating Virtual Network|Creating Network Resources|
+|Task 2|Import Your SSH Key into AWS|Create a Cloud Storage Bucket|Create a Storage account with a Storage Container|Create an Object Storage|
+|Task 3|Create an S3 Bucket|Create a project metadata|Create resources for SSH Authentication|Create resources for SSH Authentication|
 |Task 4|Create IAM Resources|Create IAM Resources|Create IAM resources|Create IAM Resources|
 |Task 5|Create a Security Group|Create Firewall rules|Create a Network Security Group|Configure Network Security|
 |Task 6|Form TF Output|Form TF Output|Form TF Output|Form TF Output|
