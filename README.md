@@ -5,10 +5,12 @@ A set of the Terraform training materials including self-study materials and han
 ![ˈtɛrəfɔːm](https://i.imgur.com/RXAzrGo.jpg)
 
 ## Materials
+
 - [Core concepts of IaC and Terraform](concepts.md)
 
 ## Tasks
-- [AWS practical lab](task_aws.md)
+
+- [Terraform practical lab](general_task.md)
 
 
 ## Quizes
