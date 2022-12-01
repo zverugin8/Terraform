@@ -32,7 +32,7 @@ IaC is a very easy sell. Its main advantages are:
 
 There are many other IaC tools. Why use Terraform specifically? Apart from the aforementioned wide choice of providers (and thus the ability to manage multi-cloud infrastructure using just one tool), it's also open source. Similar tools like **AWS CloudFormation**, **Azure Resource Manager** and **Google Cloud Deploy** only work with their corresponding cloud environments.
 
-Don't confuse Terraform with *configuration management tools* like **Ansible**, **Chef**, **Puppet** or **SaltStack**. These work with traditional **mutable** infrastructure that continually changes (e.g. an admin uses SSH to change something in an already provisioned EC2 instance or a security group) and is susceptible to configuration drift. These tools also often need a master server and agent installation. Terraform is designed to work with **immutable** infrastructure which (generally) doesn't change after provisioning and conveniently doesn't require any of that.
+Don't confuse Terraform with *configuration management tools* like **Ansible**, **Chef**, **Puppet** or **SaltStack**. These work with traditional **mutable** infrastructure that continually changes (e.g. an admin uses SSH to change something in an already provisioned EC2 instance or a security group) and is susceptible to configuration drift. These tools also often need a master server and agent installation. Terraform is designed to work with **immutable** infrastructure which (generally) doesn't change after provisioning and conveniently doesn't require any of that. There is a [great article](https://www.hashicorp.com/resources/what-is-mutable-vs-immutable-infrastructure) explaining immutable approach.
 
 Another important Terraform characteristic is **idempotency**. In this context it basically means that infrastructure, once provisioned, won't be changed by running the same provision command again.
 
@@ -146,7 +146,10 @@ For a brief but still substantial overall explanation of what Terraform is pleas
     - [conditional expressions](https://www.terraform.io/language/expressions/conditionals)
 
 
-- [Terraform AWS tutorials](https://learn.hashicorp.com/collections/terraform/aws-get-started). Beginner friendly and quick.
+- Terraform cloud related tutorials. Beginner friendly and quick:
+  - [AWS](https://learn.hashicorp.com/collections/terraform/aws-get-started)
+  - [GCP](https://developer.hashicorp.com/terraform/tutorials/gcp-get-started)
+  - [Azure](https://developer.hashicorp.com/terraform/tutorials/azure-get-started)
 
 - [A longer (2+ hours) Terraform tutorial video](https://www.youtube.com/watch?v=SLB_c_ayRMo). More comprehensive and detailed.
 
