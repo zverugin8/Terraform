@@ -206,7 +206,7 @@ Ensure that current directory is  `~/tf-epam-lab/base`
 Create outputs for your configuration:
 
 - Create `outputs.tf` file.
-- Following outputs are required: `network_name`, `subnet_ids`[set of strings], `network_security_group_id`, `storage_container_id`, `user_managed_identity_id`.
+- Following outputs are required: `network_name`, `subnet_ids`[set of strings], `network_security_group_id`, `storage_container_name`,`storage_account_name`, `user_managed_identity_id`.
 
 Store all resources from this task in the `outputs.tf` file.
 

@@ -286,7 +286,7 @@ As a result vm instance should be launched by the instance groups and a new file
 
 ## TASK 9 - Move state to Cloud Storage Bucket
 
-Hint: Create a Cloud Storage Bucket(`name=epam-gcp-tf-state`) as a pre-requirement for this task. Please create the resource by a hands in GCP console. That resource will be out of our IaC approach as it will never be recreated.
+Hint: Create a Cloud Storage Bucket(`name=epam-gcp-tf-state-${random_string}`) as a pre-requirement for this task. Please create the resource by a hands in GCP console. That resource will be out of our IaC approach as it will never be recreated.
 
 Learn about [terraform backend in Cloud Storage Bucket](https://developer.hashicorp.com/terraform/language/settings/backends/gcs)
 

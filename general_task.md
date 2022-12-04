@@ -172,7 +172,7 @@ Create a custom ssh key-pair to access your cloud compute instances:
   ### For AWS:
   - Create `aws_key_pair` resource with the name `epam-tf-ssh-key`.
   ### For GCP:
-  - Create `google_compute_project_metadata` resource with the name `epam-tf-ssh-key`.
+  - Create `google_compute_project_metadata` resource.
   - Create a metadata item key `shared_ssh_key`, as a value use the SSH public key.
   ### For Azure:
   - Create `azurerm_ssh_public_key` resource with the name `epam-tf-ssh-key`. 
@@ -208,13 +208,13 @@ Ensure that the current directory is  `~/tf-epam-lab/base`
 Create IAM resources:
 - Create an `iam.tf` file. Create IAM resources there.
   ### For AWS:
-  -	**IAM group** (`name=test-move`).
+  -	**IAM group** (`name={StudentName}-{StudentSurname}-01-group`).
   -	**IAM policy** with write permission for "epam-aws-tf-lab" bucket only (`name=write-to-epam-tf-lab-${random_string.my_numbers.result}`). 
 
     **Hint**: store your policy as json document side by side with configurations (or create 'files' subfolder for storing policy) and use templatefile() function to transfer IAM policy with imported S3 bucket name to a resource.
   -	Create **IAM role**, attach the policy to it and create **IAM instance profile** for this IAM role. Allow to assume this role for ec2 service.
   ### For GCP:
-  -	Create **Service account** (`name=test-move`).
+  -	Create **Service account** (`account_id={StudentName}-{StudentSurname}-01-account`).
   - Assign the `Storage Object Creator` role to the Service account.
   ### For Azure:
   - **User Managed Identity** (`name={StudentName}-{StudentSurname}-01`)
@@ -254,7 +254,7 @@ Create the following resources:
 
 ### For GCP:
 -	Firewall rule (`name=ssh-inbound`, `port=22`, `allowed_ip_ranges="your_IP or EPAM_office-IP_ranges"`, `description="allows ssh access from safe IP-range"`, `target_tags=web-instances`).
--	Firewall rule (`name=http-inbound`, `port=80`, `allowed_ip_ranges="130.211.0.0/22", "35.191.0.0/16"`, `description="allows http access from LoadBalancer"`, `target_tags=web-instances`). 
+-	Firewall rule (`name=http-inbound`, `port=80`, `allowed_ip_ranges="130.211.0.0/22", "35.191.0.0/16", "your_IP or EPAM_office-IP_ranges"`, `description="allows http access from LoadBalancer"`, `target_tags=web-instances`). 
 
     **Hint:** These firewall should be created for the VPC which was created in the Task 1
 
@@ -295,7 +295,7 @@ Create outputs for your configuration:
 ### For GCP:
 - Following outputs are required: `vpc_id`, `subnetworks_ids`[set of strings], `service_account_email`, `project_metadata_id`, `bucket_id`.
 ### For Azure:
-- Following outputs are required: `network_name`, `subnet_ids`[set of strings], `network_security_group_id`, `storage_container_id`, `user_managed_identity_id`.
+- Following outputs are required: `network_name`, `subnet_ids`[set of strings], `network_security_group_id`, `storage_container_name`,`storage_account_name`, `user_managed_identity_id`.
 
 Run `terraform validate`  and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
 Run `terraform plan` to see your changes.
@@ -397,12 +397,12 @@ As a result, each time a cloud compute instance launches a new file should be cr
 Learn about terraform backends [here](https://developer.hashicorp.com/terraform/language/settings/backends/configuration)
 
 ### For AWS:
-- Create an S3 Bucket(`name=epam-aws-tf-state`) and a DynamoDB table as a pre-requirement for this task. There are multiple ways to do this, including Terraform and CloudFormation. But please just create both resources by a hands in AWS console. Those resources will be out of our IaC approach as they will never be recreated.
+- Create an S3 Bucket(`name=epam-aws-tf-state-${random_string}`) and a DynamoDB table as a pre-requirement for this task. There are multiple ways to do this, including Terraform and CloudFormation. But please just create both resources by a hands in AWS console. Those resources will be out of our IaC approach as they will never be recreated.
 
   Learn about [terraform backend in AWS S3](https://www.terraform.io/docs/language/settings/backends/s3.html)
 
 ### For GCP:
-- Create a Cloud Storage Bucket(`name=epam-gcp-tf-state`) as a pre-requirement for this task. Please create the resource by a hands in GCP console. That resource will be out of our IaC approach as it will never be recreated.
+- Create a Cloud Storage Bucket(`name=epam-gcp-tf-state-${random_string}`) as a pre-requirement for this task. Please create the resource by a hands in GCP console. That resource will be out of our IaC approach as it will never be recreated.
 
   Learn about [terraform backend in Cloud Storage Bucket](https://developer.hashicorp.com/terraform/language/settings/backends/gcs)
 
@@ -497,7 +497,7 @@ Refine your configuration :
   ### For AWS:
   - An account ID and region for the provider.
   ### For GCP:
-  - A project numeric ID and region to operate under.
+  - A project numeric ID and default service account email.
   ### For Azure:
   - A Subscription ID and a Client ID of the current user.
 

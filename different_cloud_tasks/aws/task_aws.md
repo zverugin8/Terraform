@@ -307,7 +307,7 @@ As a result ec2 instance should be launched by autoscaling-group and a new file 
 
 ## TASK 9 - Move state to S3/Locking
 
-Hint: Create an S3 Bucket(`name=epam-aws-tf-state`) and a DynamoDB table as a pre-requirement for this task. There are multiple ways to do this, including Terraform and CloudFormation. But
+Hint: Create an S3 Bucket(`name=epam-aws-tf-state-${random_string}`) and a DynamoDB table as a pre-requirement for this task. There are multiple ways to do this, including Terraform and CloudFormation. But
 please just create both resources by a hands in AWS console. Those resources will be out of our IaC approach as they will never be recreated.
 
 Learn about [terraform backend in AWS S3](https://www.terraform.io/docs/language/settings/backends/s3.html)
