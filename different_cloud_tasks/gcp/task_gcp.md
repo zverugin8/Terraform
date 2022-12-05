@@ -3,8 +3,8 @@
   * [PRE-REQUISITES](task_gcp.md#pre-requisites)
 - [Creating Infrastructure](task_gcp.md#creating-infrastructure)
   * [TASK 1 - Creating VPC](task_gcp.md#task-1-creating-vpc)
-  * [TASK 2 - Create a Cloud Storage Bucket](task_gcp.md#task-2-create-a-cloud-storage-bucket)
-  * [TASK 3 - Create a project metadata](task_gcp.md#task-3-create-a-project-metadata)
+  * [TASK 2 - Create a project metadata](task_gcp.md#task-2-create-a-project-metadata)
+  * [TASK 3 - Create a Cloud Storage Bucket](task_gcp.md#task-3-create-a-cloud-storage-bucket)
   * [TASK 4 - Create IAM Resources](task_gcp.md#task-4-create-iam-resources)
   * [TASK 5 - Create Firewall rules](task_gcp.md#task-5-create-firewall-rules)
   * [TASK 6 - Form TF Output](task_gcp.md#task-6-form-tf-output)
@@ -81,7 +81,30 @@ Apply your changes when you're ready.
 - GCP resources created as expected (check GCP Console)
 - Push *.tf configuration files to git
 
-## TASK 2 - Create a Cloud Storage Bucket
+## TASK 2 - Create a project metadata
+
+Ensure that the current directory is `~/tf-epam-lab/base`
+
+Create a project metadata:
+
+- Create a project metadata refer to [this document](https://cloud.google.com/compute/docs/metadata/overview) and [this document](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_project_metadata).
+- Create a `variables.tf` file with empty variable `ssh_key` but with the following description "Provides custom public ssh key". Never store you secrets inside the code!
+- Create a `ssh.tf` file with `google_compute_project_metadata` resource. Create a metadata item key `shared_ssh_key`, as a value use an `ssh_key` variable as a public key source.
+- Run `terraform plan` and provide required public key. Observe the output and run `terraform plan` again.
+- To prevent providing ssh key on each configuration run and staying secure set binding environment variable - `export TF_VAR_ssh_key="YOUR_PUBLIC_SSH_KEY_STRING"`
+- Run `terraform plan` and observe the output.
+
+Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
+
+Apply your changes when ready.
+
+### Definition of DONE:
+
+- Terraform created infrastructure with no errors
+- GCP resources created as expected (check GCP Console)
+- Push *.tf configuration files to git
+
+## TASK 3 - Create a Cloud Storage Bucket
 
 Ensure that the current directory is  `~/tf-epam-lab/base`
 
@@ -105,30 +128,6 @@ Apply your changes when ready.
 - Terraform created infrastructure with no errors
 - GCP resources created as expected (check GCP Console)
 - Push *.tf configuration files to git
-
-## TASK 3 - Create a project metadata
-
-Ensure that the current directory is `~/tf-epam-lab/base`
-
-Create a project metadata:
-
-- Create a project metadata refer to [this document](https://cloud.google.com/compute/docs/metadata/overview) and [this document](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_project_metadata).
-- Create a `variables.tf` file with empty variable `ssh_key` but with the following description "Provides custom public ssh key". Never store you secrets inside the code!
-- Create a `ssh.tf` file with `google_compute_project_metadata` resource. Create a metadata item key `shared_ssh_key`, as a value use an `ssh_key` variable as a public key source.
-- Run `terraform plan` and provide required public key. Observe the output and run `terraform plan` again.
-- To prevent providing ssh key on each configuration run and staying secure set binding environment variable - `export TF_VAR_ssh_key="YOUR_PUBLIC_SSH_KEY_STRING"`
-- Run `terraform plan` and observe the output.
-
-Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
-
-Apply your changes when ready.
-
-### Definition of DONE:
-
-- Terraform created infrastructure with no errors
-- GCP resources created as expected (check GCP Console)
-- Push *.tf configuration files to git
-
 
 ## TASK 4 - Create IAM Resources
 Ensure that the current directory is  `~/tf-epam-lab/base`
@@ -286,7 +285,7 @@ As a result vm instance should be launched by the instance groups and a new file
 
 ## TASK 9 - Move state to Cloud Storage Bucket
 
-Hint: Create a Cloud Storage Bucket(`name=epam-gcp-tf-state`) as a pre-requirement for this task. Please create the resource by a hands in GCP console. That resource will be out of our IaC approach as it will never be recreated.
+Hint: Create a Cloud Storage Bucket(`name=epam-gcp-tf-state-${random_string}`) as a pre-requirement for this task. Please create the resource by a hands in GCP console. That resource will be out of our IaC approach as it will never be recreated.
 
 Learn about [terraform backend in Cloud Storage Bucket](https://developer.hashicorp.com/terraform/language/settings/backends/gcs)
 

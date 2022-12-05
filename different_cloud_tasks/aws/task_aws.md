@@ -89,38 +89,7 @@ Apply your changes when you're ready.
 - Push *.tf configuration files to git
 - Check your efforts through the proctor gitlab pipeline.
 
-## TASK 2 - Import Your SSH Key into AWS
-
-Ensure that the current directory is `~/tf-epam-lab/base`
-
-Create a custom ssh key-pair to access your ec2 instances:
-
-- Create your ssh key pair [refer to this document](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws)
-- Create a `variables.tf` file with empty variable "ssh_key" but with the following description "Provides custom public ssh key". Never store you secrets inside the code!
-- Create a `ssh.tf` file with `aws_key_pair` resource. Use ssh_key variable as a public key source.
-- Run `terraform plan` and provide required public key. Observe the output and run `terraform plan` again.
-- To prevent providing ssh key on each configuration run and staying secure set binding environment variable - `export TF_VAR_ssh_key="YOUR_PUBLIC_SSH_KEY_STRING"`
-- Run `terraform plan` and observe the output.
-
-
-Equip all resources with following tags:
-    - `Terraform=true`, 
-    - `Project=epam-tf-lab`
-    - `Owner={StudentName}_{StudentSurname}`
-
-
-Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
-
-Apply your changes when ready.
-
-### Definition of DONE:
-
-- Terraform created infrastructure with no errors
-- AWS resources created as expected (check AWS Console)
-- Push *.tf configuration files to git
-- Check your efforts through the proctor gitlab pipeline.
-
-## TASK 3 - Create an S3 Bucket
+## TASK 2 - Create an S3 Bucket
 
 Ensure that the current directory is  `~/tf-epam-lab/base`
 
@@ -307,7 +276,7 @@ As a result ec2 instance should be launched by autoscaling-group and a new file 
 
 ## TASK 9 - Move state to S3/Locking
 
-Hint: Create an S3 Bucket(`name=epam-aws-tf-state`) and a DynamoDB table as a pre-requirement for this task. There are multiple ways to do this, including Terraform and CloudFormation. But
+Hint: Create an S3 Bucket(`name=epam-aws-tf-state-${random_string}`) and a DynamoDB table as a pre-requirement for this task. There are multiple ways to do this, including Terraform and CloudFormation. But
 please just create both resources by a hands in AWS console. Those resources will be out of our IaC approach as they will never be recreated.
 
 Learn about [terraform backend in AWS S3](https://www.terraform.io/docs/language/settings/backends/s3.html)
