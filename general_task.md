@@ -3,8 +3,8 @@
   * [PRE-REQUISITES](general_task.md#pre-requisites)
 - [Creating Infrastructure](general_task.md#creating-infrastructure)
   * [TASK 1 - Creating Network Resources](general_task.md#task-1-creating-network-resources)
-  * [TASK 2 - Create an Object Storage](general_task.md#task-2-create-an-object-storage)
-  * [TASK 3 - Create resources for SSH Authentication](general_task.md#task-3-create-resources-for-ssh-authentication)
+  * [TASK 2 - Create resources for SSH Authentication](general_task.md#task-2-create-resources-for-ssh-authentication)
+  * [TASK 3 - Create an Object Storage](general_task.md#task-3-create-an-object-storage)
   * [TASK 4 - Create IAM Resources](general_task.md#task-4-create-iam-resources)
   * [TASK 5 - Configure Network Security](general_task.md#task-5-configure-network-security)
   * [TASK 6 - Form TF Output](general_task.md#task-6-form-tf-output)
@@ -123,44 +123,7 @@ Apply your changes when you're ready.
 - Push *.tf configuration files to git
 - Check your efforts through the proctor gitlab pipeline (if a pipeline configured)
 
-## TASK 2 - Create an Object Storage
-
-Ensure that the current directory is  `~/tf-epam-lab/base`
-
-Create an object bucket as the storage for your infrastructure:
-
--	Create file `storage.tf`. Storage resources should be described there.
-- Create an object cloud storage resource.
-  ### For AWS:
-  - Create an S3 bucket. Name this bucket `epam-tf-lab-${random_string.my_numbers.result}` to provide it with a unique name. 
-  ### For GCP:
-  - Create a cloud storage bucket. Name this bucket `epam-tf-lab-${random_string.my_numbers.result}` to provide it with a unique name.
-  ### For Azure:
-  - Create a storage account. Name this account `epamtflab${random_string.my_numbers.result}` to provide it with a unique name.
-  - Create a new storage container with the name `epam-tf-lab-container`
-
-  **Hint** See [random_string](https://registry.terraform.io/providers/hashicorp/random/) latest/docs/resources/string) documentation for details.
-
--	Set default permissions for the object storage as private. Never share your bucket with the whole world!
-
-Equip all possible resources with following tags or labels:
-  - `Terraform=true`, 
-  - `Project=epam-tf-lab`
-  - `Owner={StudentName}_{StudentSurname}`
-
-Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
-Run `terraform plan` to see your changes.
-
-Apply your changes when ready.
-
-### Definition of DONE:
-
-- Terraform created infrastructure with no errors
-- All resources created as expected (check Cloud WebUI)
-- Push *.tf configuration files to git
-- Check your efforts through the proctor gitlab pipeline (if a pipeline configured)
-
-## TASK 3 - Create resources for SSH Authentication
+## TASK 2 - Create resources for SSH Authentication
 
 Ensure that the current directory is `~/tf-epam-lab/base`
 
@@ -201,6 +164,42 @@ Apply your changes when ready.
 - Push *.tf configuration files to git
 - Check your efforts through the proctor gitlab pipeline (if a pipeline configured)
 
+## TASK 3 - Create an Object Storage
+
+Ensure that the current directory is  `~/tf-epam-lab/base`
+
+Create an object bucket as the storage for your infrastructure:
+
+-	Create file `storage.tf`. Storage resources should be described there.
+- Create an object cloud storage resource.
+  ### For AWS:
+  - Create an S3 bucket. Name this bucket `epam-tf-lab-${random_string.my_numbers.result}` to provide it with a unique name. 
+  ### For GCP:
+  - Create a cloud storage bucket. Name this bucket `epam-tf-lab-${random_string.my_numbers.result}` to provide it with a unique name.
+  ### For Azure:
+  - Create a storage account. Name this account `epamtflab${random_string.my_numbers.result}` to provide it with a unique name.
+  - Create a new storage container with the name `epam-tf-lab-container`
+
+  **Hint** See [random_string](https://registry.terraform.io/providers/hashicorp/random/) latest/docs/resources/string) documentation for details.
+
+-	Set default permissions for the object storage as private. Never share your bucket with the whole world!
+
+Equip all possible resources with following tags or labels:
+  - `Terraform=true`, 
+  - `Project=epam-tf-lab`
+  - `Owner={StudentName}_{StudentSurname}`
+
+Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
+Run `terraform plan` to see your changes.
+
+Apply your changes when ready.
+
+### Definition of DONE:
+
+- Terraform created infrastructure with no errors
+- All resources created as expected (check Cloud WebUI)
+- Push *.tf configuration files to git
+- Check your efforts through the proctor gitlab pipeline (if a pipeline configured)
 
 ## TASK 4 - Create IAM Resources
 Ensure that the current directory is  `~/tf-epam-lab/base`

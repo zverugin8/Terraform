@@ -3,8 +3,8 @@
   * [PRE-REQUISITES](task_azure.md#pre-requisites)
 - [Creating Infrastructure](task_azure.md#creating-infrastructure)
   * [TASK 1 - Creating Virtual Network](task_azure.md#task-1-creating-virtual-network)
-  * [TASK 2 - Create a Storage account with a Storage Container](task_azure.md#task-2-create-a-storage-account-with-a-storage-container)
-  * [TASK 3 - Create resources for SSH Authentication](task_azure.md#task-3-create-resources-for-ssh-authentication)
+  * [TASK 2 - Create resources for SSH Authentication](task_azure.md#task-2-create-resources-for-ssh-authentication)
+  * [TASK 3 - Create a Storage account with a Storage Container](task_azure.md#task-3-create-a-storage-account-with-a-storage-container)
   * [TASK 4 - Create IAM resources](task_azure.md#task-4-create-iam-resources)
   * [TASK 5 - Create a Network Security Group](task_azure.md#task-5-create-a-network-security-group)
   * [TASK 6 - Form TF Output](task_azure.md#task-6-form-tf-output)
@@ -83,32 +83,7 @@ Apply your changes when you're ready.
 - Azure resources created as expected (check Azure Portal)
 - Push *.tf configuration files to git
 
-## TASK 2 - Create a Storage account with a Storage Container
-
-Ensure that the current directory is  `~/tf-epam-lab/base`
-
-Create a storage account. For this storage account create a storage container as the storage for your infrastructure:
-
--	Create `storage.tf`. Name your storage account "epamazuretflab${random_string.my_numbers.result}" to provide it with partition unique name. See [random_string](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) documentation for details.
--	Set `Public access level` for the new storage container private. Never share your data to the whole world!
-
-Equip a storage account with following tags:
-    - `Terraform=true`, 
-    - `Project=epam-tf-lab`
-    - `Owner={StudentName}_{StudentSurname}`
-
-Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
-Run `terraform plan` to see your changes.
-
-Apply your changes when ready.
-
-### Definition of DONE:
-
-- Terraform created infrastructure with no errors
-- Azure resources created as expected (check Azure Portal)
-- Push *.tf configuration files to git
-
-## TASK 3 - Create resources for SSH Authentication
+## TASK 2 - Create resources for SSH Authentication
 
 Ensure that the current directory is `~/tf-epam-lab/base`
 
@@ -142,6 +117,31 @@ Apply your changes when ready.
 - All resources created as expected (check Cloud WebUI)
 - Push *.tf configuration files to git
 - Check your efforts through the proctor gitlab pipeline (if a pipeline configured)
+
+## TASK 3 - Create a Storage account with a Storage Container
+
+Ensure that the current directory is  `~/tf-epam-lab/base`
+
+Create a storage account. For this storage account create a storage container as the storage for your infrastructure:
+
+-	Create `storage.tf`. Name your storage account "epamazuretflab${random_string.my_numbers.result}" to provide it with partition unique name. See [random_string](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) documentation for details.
+-	Set `Public access level` for the new storage container private. Never share your data to the whole world!
+
+Equip a storage account with following tags:
+    - `Terraform=true`, 
+    - `Project=epam-tf-lab`
+    - `Owner={StudentName}_{StudentSurname}`
+
+Run `terraform validate` and `terraform fmt` to check if your configuration is valid and fits to a canonical format and style. Do this each time before applying your changes.
+Run `terraform plan` to see your changes.
+
+Apply your changes when ready.
+
+### Definition of DONE:
+
+- Terraform created infrastructure with no errors
+- Azure resources created as expected (check Azure Portal)
+- Push *.tf configuration files to git
 
 ## TASK 4 - Create IAM resources
 Ensure that the current directory is  `~/tf-epam-lab/base`
