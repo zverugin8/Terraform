@@ -137,9 +137,9 @@ Let's consider other examples.
 ### AWS Security Group with rules
 #### Stacked Resources Option
 
-Security groups could be created with  included rules (ingress and egress blocks). Pros is that you can easy read the security group and understand what is managed by it. From the other side any change to any rule, like even change description for ingress rule will lead to destruction of whole security group, what again means downtime.
+Security groups could be created with  included rules (`ingress` and `egress` blocks). Pros is that you can easy read the security group and understand what is managed by it. From the other side any change to any rule, like even change description for ingress rule will lead to destruction of whole security group, what means downtime again.
 
-Another disadvantage could be faced with looping reference to security group ids. If you have security_group_A wh ich allows only trafic from security_group_B only and vice versa. You cannot create such groups in case if you define those rules inside the group- it leads to a loop while one security group waiting for another to be created. Having security group rules as standalone resources allows securtity groups to be created it this case.
+Another disadvantage could be faced with looping reference to security group ids. If you have `security_group_A` which allows only trafic from `security_group_B` only and vice versa. You cannot create such groups in case if you define those rules inside the group, it leads to a loop while one security group waiting for another to be created. Having security group rules as standalone resources allows securtity groups to be created it this case.
 
 ```
 resource "aws_security_group" "lab_sg" {
