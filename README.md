@@ -6,11 +6,11 @@ A set of the Terraform training materials including self-study materials and han
 
 ## Materials
 
-- [Core concepts of IaC and Terraform](concepts.md)
+- <b><mark>[Core concepts of IaC and Terraform](concepts.md)</mark></b>
 
 ## Tasks
 
-- [Terraform practical lab](general_task.md)
+- <b><mark>[Terraform practical lab](general_task.md)</mark></b>
 
 
 ## Quizes
