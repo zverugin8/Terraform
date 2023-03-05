@@ -191,6 +191,34 @@ resource "aws_security_group_rule" "egress_to_the_internet" {
   security_group_id =  aws_security_group.lab_sg.id
 }
 ```
+### AWS IAM Role with managed policy
+#### Stacked Resources Option
+
+IAM Role can recieve policy with managed_policy_arns parameter. Or we can use `aws_iam_role_policy_attachment` resource. In first case you cannot change or add policy without resource recreation.
+
+```
+resource "aws_iam_role" "example_role" {
+  name = "example-role"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/AdministratorAccess",
+  ]
+}
+```
+
+#### Separated Resources Option
+```
+resource "aws_iam_role" "example_role" {
+  name = "example-role"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "example_role_admin" {
+  role       = aws_iam_role.example_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+```
+
 
 ### Azure Network Security Group
 #### Stacked Resources Option
