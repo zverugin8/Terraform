@@ -1,4 +1,4 @@
 locals {
-  StudentName       = "Siarhei"
-  StudentSurname    = "Saroka"
+  studentname       = "siarhei"
+  studentsurname    = "saroka"
 }

@@ -1,5 +1,5 @@
 resource "google_compute_network" "vpc_network" {
-  name                    = "${local.StudentName}-${local.StudentSurname}-01-vpc"
+  name                    = "${local.studentname}-${local.studentsurname}-01-vpc"
   auto_create_subnetworks = false
 }
 
