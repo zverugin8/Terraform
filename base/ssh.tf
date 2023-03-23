@@ -5,3 +5,5 @@ resource "google_compute_project_metadata" "project_metadata" {
 
   }
 }
+
+# have to add env : export TF_VAR_ssh_key="YOUR_PUBLIC_SSH_KEY_STRING"

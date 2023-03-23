@@ -1,6 +1,7 @@
 resource "random_string" "rnd" {
   length  = 6
   special = false
+  upper   = false
 }
 
 resource "google_storage_bucket" "task3_bucket" {
