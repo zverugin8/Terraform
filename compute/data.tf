@@ -1,6 +1,9 @@
 data "terraform_remote_state" "base" {
-  backend = "local"
+  backend = "gcs"
   config = {
-    path = "/home/user1/tf-epam-lab/base/terraform.tfstate"
+    bucket  = "epam-gcp-tf-state-random"
+    prefix  = "terraform/state/base/"
+    credentials = "${file("/home/user1/.gcp/credentials.json")}"
+    
   }
 }
