@@ -9,8 +9,8 @@ resource "local_file" "start" {
 
 # instance template
 resource "google_compute_instance_template" "mig_template" {
-  count = length(local.regions)
-  name  = "epam-gcp-tf-lab-${local.regions[count.index]}"
+  for_each = local.regions
+  name     = "epam-gcp-tf-lab-${each.value}"
 
   machine_type = "f1-micro"
   tags         = ["web-instances"]
@@ -32,7 +32,7 @@ resource "google_compute_instance_template" "mig_template" {
 
   network_interface {
     network    = local.vpc
-    subnetwork = data.terraform_remote_state.base.outputs.subnetworks_ids[count.index]
+    subnetwork = data.terraform_remote_state.base.outputs.subnetworks_ids[each.key]
     access_config {
       network_tier = "PREMIUM"
     }
@@ -42,21 +42,21 @@ resource "google_compute_instance_template" "mig_template" {
     ignore_changes = [network_interface]
   }
 
-  metadata_startup_script = local_file.start.id
-#   metadata = {
-#     "startup-script" = <<EOF
-# #!/bin/bash
-# set -ex
-# apt update
-# apt-get install nginx -y
-# INSTANCE_ID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google")
-# VM_MACHINE_UUID=$(sudo cat /sys/devices/virtual/dmi/id/product_uuid |tr '[:upper:]' '[:lower:]')
-# echo "This message was generated on instance $INSTANCE_ID with the following UUID $VM_MACHINE_UUID" > $INSTANCE_ID.txt
-# gsutil cp ./$INSTANCE_ID.txt gs://${local.bucket}
-# cp ./$INSTANCE_ID.txt /var/www/html/index.html
-# echo "Done!"
-# EOF
-#   }
+  metadata_startup_script = file(local_file.start.filename)
+  #   metadata = {
+  #     "startup-script" = <<EOF
+  # #!/bin/bash
+  # set -ex
+  # apt update
+  # apt-get install nginx -y
+  # INSTANCE_ID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google")
+  # VM_MACHINE_UUID=$(sudo cat /sys/devices/virtual/dmi/id/product_uuid |tr '[:upper:]' '[:lower:]')
+  # echo "This message was generated on instance $INSTANCE_ID with the following UUID $VM_MACHINE_UUID" > $INSTANCE_ID.txt
+  # gsutil cp ./$INSTANCE_ID.txt gs://${local.bucket}
+  # cp ./$INSTANCE_ID.txt /var/www/html/index.html
+  # echo "Done!"
+  # EOF
+  #   }
 }
 
 # reserved IP address
@@ -79,15 +79,15 @@ resource "google_compute_health_check" "autohealing" {
 }
 
 resource "google_compute_region_instance_group_manager" "appserver" {
-  count              = length(local.regions)
-  name               = "epam-gcp-tf-lab-${local.regions[count.index]}"
-  base_instance_name = "epam-gcp-tf-lab-${local.regions[count.index]}"
+  for_each           = local.regions
+  name               = "epam-gcp-tf-lab-${each.value}"
+  base_instance_name = "epam-gcp-tf-lab-${each.value}"
   target_size        = 1
   #zone               = "${local.regions[count.index]}-c"
-  region = local.regions[count.index]
+  region = each.value
 
   version {
-    instance_template = google_compute_instance_template.mig_template[count.index].id
+    instance_template = google_compute_instance_template.mig_template[each.key].id
   }
 
   named_port {
