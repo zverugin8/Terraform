@@ -1,3 +1,12 @@
+# startup script 
+resource "local_file" "start" {
+  content = templatefile("${path.module}/start.tpl", {
+    mybucket = local.bucket
+  })
+
+  filename = "./start.sh"
+}
+
 # instance template
 resource "google_compute_instance_template" "mig_template" {
   count = length(local.regions)
@@ -33,27 +42,27 @@ resource "google_compute_instance_template" "mig_template" {
     ignore_changes = [network_interface]
   }
 
-  #metadata_startup_script = file("${path.module}/start.sh")
-  metadata = {
-    "startup-script" = <<EOF
-#!/bin/bash
-set -ex
-apt update
-apt-get install nginx -y
-INSTANCE_ID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google")
-VM_MACHINE_UUID=$(sudo cat /sys/devices/virtual/dmi/id/product_uuid |tr '[:upper:]' '[:lower:]')
-echo "This message was generated on instance $INSTANCE_ID with the following UUID $VM_MACHINE_UUID" > $INSTANCE_ID.txt
-gsutil cp ./$INSTANCE_ID.txt gs://${local.bucket}
-cp ./$INSTANCE_ID.txt /var/www/html/index.html
-echo "Done!"
-EOF
-  }
+  metadata_startup_script = local_file.start.id
+#   metadata = {
+#     "startup-script" = <<EOF
+# #!/bin/bash
+# set -ex
+# apt update
+# apt-get install nginx -y
+# INSTANCE_ID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google")
+# VM_MACHINE_UUID=$(sudo cat /sys/devices/virtual/dmi/id/product_uuid |tr '[:upper:]' '[:lower:]')
+# echo "This message was generated on instance $INSTANCE_ID with the following UUID $VM_MACHINE_UUID" > $INSTANCE_ID.txt
+# gsutil cp ./$INSTANCE_ID.txt gs://${local.bucket}
+# cp ./$INSTANCE_ID.txt /var/www/html/index.html
+# echo "Done!"
+# EOF
+#   }
 }
 
 # reserved IP address
-# resource "google_compute_global_address" "default" {
-#   name = "static-ip"
-# }
+resource "google_compute_global_address" "default" {
+  name = "static-ip"
+}
 
 # health check
 resource "google_compute_health_check" "autohealing" {
@@ -69,12 +78,13 @@ resource "google_compute_health_check" "autohealing" {
   }
 }
 
-resource "google_compute_instance_group_manager" "appserver" {
+resource "google_compute_region_instance_group_manager" "appserver" {
   count              = length(local.regions)
   name               = "epam-gcp-tf-lab-${local.regions[count.index]}"
   base_instance_name = "epam-gcp-tf-lab-${local.regions[count.index]}"
   target_size        = 1
-  zone               = "${local.regions[count.index]}-c"
+  #zone               = "${local.regions[count.index]}-c"
+  region = local.regions[count.index]
 
   version {
     instance_template = google_compute_instance_template.mig_template[count.index].id
@@ -102,11 +112,11 @@ resource "google_compute_backend_service" "default" {
   health_checks         = [google_compute_health_check.autohealing.id]
 
   backend {
-    group = google_compute_instance_group_manager.appserver[0].instance_group
+    group = google_compute_region_instance_group_manager.appserver[0].instance_group
   }
 
   backend {
-    group = google_compute_instance_group_manager.appserver[1].instance_group
+    group = google_compute_region_instance_group_manager.appserver[1].instance_group
   }
 }
 
@@ -129,5 +139,5 @@ resource "google_compute_global_forwarding_rule" "default" {
   load_balancing_scheme = "EXTERNAL"
   port_range            = "80"
   target                = google_compute_target_http_proxy.default.id
-  #ip_address            = google_compute_global_address.default.id
+  ip_address            = google_compute_global_address.default.id
 }
