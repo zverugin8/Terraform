@@ -6,4 +6,6 @@ locals {
   vpc     = data.terraform_remote_state.base.outputs.vpc_id
   bucket  = data.terraform_remote_state.base.outputs.bucket_id
   project = data.terraform_remote_state.base.outputs.project_metadata_id
+  studentname    = "siarhei"
+  studentsurname = "saroka"
 }
