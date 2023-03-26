@@ -1,4 +1,5 @@
 resource "google_service_account" "test-import" {
+  provider     = google.task11
   account_id   = "test-import"
   display_name = "test-import"
 }

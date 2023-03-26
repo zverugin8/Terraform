@@ -1,11 +1,9 @@
 locals {
-  name    = data.terraform_remote_state.base.outputs.name
-  surname = data.terraform_remote_state.base.outputs.surname
-  regions = { 0 = "us-central1", 1 = "us-east1" }
-  sa      = data.terraform_remote_state.base.outputs.service_account_email
-  vpc     = data.terraform_remote_state.base.outputs.vpc_id
-  bucket  = data.terraform_remote_state.base.outputs.bucket_id
-  project = data.terraform_remote_state.base.outputs.project_metadata_id
-  studentname    = "siarhei"
-  studentsurname = "saroka"
+  name    = var.studentname
+  surname = var.studentsurname
+  regions = var.regions
+  sa      = data.google_service_account.sa04-tf.email
+  vpc     = data.google_compute_network.tf_vpc.name
+  project = data.google_project.current.id
+  subnets = [data.google_compute_subnetwork.us-central1.id, data.google_compute_subnetwork.us-east1.id]
 }

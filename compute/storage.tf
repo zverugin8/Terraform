@@ -5,6 +5,7 @@ resource "random_string" "rnd" {
 }
 
 resource "google_storage_bucket" "task3_bucket" {
+  provider                    = google.task11
   name                        = "epam-gcp-tf-lab-${random_string.rnd.result}"
   location                    = "us-central1"
   storage_class               = "STANDARD"
@@ -15,7 +16,7 @@ resource "google_storage_bucket" "task3_bucket" {
     terraform   = true
     epam-tf-lab = true
     tflab       = "task3"
-    owner       = "${local.studentname}_${local.studentsurname}"
+    owner       = "${var.studentname}_${var.studentsurname}"
   }
 }
 

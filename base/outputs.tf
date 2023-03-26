@@ -14,9 +14,9 @@ output "project_metadata_id" {
   value = google_compute_project_metadata.project_metadata.id
 }
 
-output "bucket_id" {
-  value = google_storage_bucket.task3_bucket.id
-}
+# output "bucket_id" {
+#   value = google_storage_bucket.task3_bucket.id
+# }
 
 output "name" {
   value = local.studentname
@@ -25,3 +25,15 @@ output "name" {
 output "surname" {
   value = local.studentsurname
 }
+
+output "project_number" {
+  value = data.google_project.current.number
+}
+
+output "default_sa" {
+  value = data.google_app_engine_default_service_account.default.email
+}
+output "regions" {
+  value = data.google_compute_regions.default
+}
+

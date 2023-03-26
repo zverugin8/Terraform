@@ -1,7 +1,7 @@
 # startup script 
 resource "local_file" "start" {
   content = templatefile("${path.module}/start.tpl", {
-    mybucket = local.bucket
+    mybucket = google_storage_bucket.task3_bucket.name
   })
 
   filename = "./start.sh"
@@ -14,6 +14,7 @@ resource "google_compute_instance_template" "mig_template" {
 
   machine_type = "f1-micro"
   tags         = ["web-instances"]
+  project      = var.project
 
   labels = {
     terraform = true,
@@ -31,8 +32,9 @@ resource "google_compute_instance_template" "mig_template" {
   }
 
   network_interface {
-    network    = local.vpc
-    subnetwork = data.terraform_remote_state.base.outputs.subnetworks_ids[each.key]
+    network = local.vpc
+    #subnetwork = data.terraform_remote_state.base.outputs.subnetworks_ids[each.key]
+    subnetwork = local.subnets[each.key]
     access_config {
       network_tier = "PREMIUM"
     }
@@ -61,11 +63,13 @@ resource "google_compute_instance_template" "mig_template" {
 
 # reserved IP address
 resource "google_compute_global_address" "default" {
-  name = "static-ip"
+  project = var.project
+  name    = "static-ip"
 }
 
 # health check
 resource "google_compute_health_check" "autohealing" {
+  project             = var.project
   name                = "autohealing-health-check"
   check_interval_sec  = 5
   timeout_sec         = 5
@@ -80,6 +84,7 @@ resource "google_compute_health_check" "autohealing" {
 
 resource "google_compute_region_instance_group_manager" "appserver" {
   for_each           = local.regions
+  project            = var.project
   name               = "epam-gcp-tf-lab-${each.value}"
   base_instance_name = "epam-gcp-tf-lab-${each.value}"
   target_size        = 1
@@ -104,6 +109,7 @@ resource "google_compute_region_instance_group_manager" "appserver" {
 # backend service
 resource "google_compute_backend_service" "default" {
   name                  = "backend-service"
+  project               = var.project
   protocol              = "HTTP"
   timeout_sec           = 10
   enable_cdn            = true
@@ -123,18 +129,21 @@ resource "google_compute_backend_service" "default" {
 # url map
 resource "google_compute_url_map" "default" {
   name            = "tf-url-map"
+  project         = var.project
   default_service = google_compute_backend_service.default.id
 }
 
 # http proxy
 resource "google_compute_target_http_proxy" "default" {
   name    = "tf-http-proxy"
+  project = var.project
   url_map = google_compute_url_map.default.id
 }
 
 # forwarding rule
 resource "google_compute_global_forwarding_rule" "default" {
   name                  = "ft-forwarding-rule"
+  project               = var.project
   ip_protocol           = "TCP"
   load_balancing_scheme = "EXTERNAL"
   port_range            = "80"
