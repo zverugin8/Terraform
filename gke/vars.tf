@@ -26,6 +26,6 @@ variable "project" {
 # }
 
 variable "nodes" {
-  type        = number
+  type = number
 }
 

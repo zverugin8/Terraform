@@ -11,3 +11,7 @@ output "subnet" {
   value = local.subnets
 }
 
+output "nodes" {
+  value = var.nodes
+}
+
